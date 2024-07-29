@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const userRouter = Router();
 const z = require("zod");
-const { users } = require("../Database");
+const { users, tasks } = require("../Database");
 const bcrypt = require("bcrypt");
 const userInputMiddleware = require("../Middlewares/userInputMiddleware");
 const jwt = require("jsonwebtoken");
@@ -27,11 +27,11 @@ userRouter.post("/signup", userInputMiddleware, async (req, res) => {
     });
     if (response) {
       res.status(200).json({
-        message: "The data is pushed successfully!!",
+        message: "User is created successfully!!",
       });
     } else {
       res.status(200).json({
-        message: "The is some issue in pushing the data!!",
+        message: "Issue in creating the user!!",
       });
     }
   } else {
@@ -65,7 +65,7 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
       const token = jwt.sign({ username: check.username }, JWT_SECRET, {
         expiresIn: "1d",
       });
-      // TODO:  token to be stored in the cookie using the cookie-parser
+      // TODO:  token to be stored in the cookie using the cookie-parser -> after doing signup signin in frontend
       res.status(200).json({
         token: token,
       });
@@ -77,17 +77,18 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
   }
 });
 
-// test endpoint
+// the endpoint to add the tasks
 userRouter.post("/addtasks", userValdationMW, async (req, res) => {
-    const {tasks} = req.body;
+    const {tname, desc} = req.body;
 
     // push the data in the DB
-    const response = await users.create({
-        tasks : tasks
+    const response = await tasks.create({
+        taskName : tname,
+        description : desc
     })
     if(response){
         res.status(200).json({
-            message : "the task is created successfully!!"
+          task_id : response._id
         })
     }
     else{
@@ -96,5 +97,31 @@ userRouter.post("/addtasks", userValdationMW, async (req, res) => {
         })
     }
 })
+
+// the endpoint to actually add the tasks to the sepcific userarray
+userRouter.post("/addtasks/:taskId", userValdationMW, async (req, res) => {
+    const taskId = req.params.taskId;
+    const username = req.headers.username;
+
+    const update = await users.findOneAndUpdate({
+      username : username  
+    },{
+      "$push" : {
+        assignedTasks : taskId
+      }
+    })
+
+    if(update) {
+      res.status(200).json({
+        message : "The user is updated with the task!!"
+      })
+    }
+    else{
+      res.status(404).json({
+        message : "There is some issue in updating the tasks!"
+      })
+    }
+})
+
 
 module.exports = userRouter;
