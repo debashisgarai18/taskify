@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-mongoose.connect(
-  "mongodb+srv://deba018_:Debashis10@cluster0.nflzrpr.mongodb.net/taskify"
-);
+const {mongo_url} = require('../config')
+mongoose.connect(mongo_url);
 
 // defifing the taskSchema, which will accept the taskname and the description from the user
 const taskSchema = new mongoose.Schema({
