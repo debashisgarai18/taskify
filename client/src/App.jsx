@@ -1,12 +1,24 @@
 import './App.css'
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Home from './components/Home';
+import Landing from './components/Landing'
+import Layout from './components/Layout';
+import Signin from './components/Signin';
+import Signup from './components/Signup';
 
 function App() {
   return (
-    <>
-      <div className='text-2xl p-4 bg-red-300'>
-        this is going to be Taskify
-      </div>
-    </>
+      <BrowserRouter>
+      <Routes>
+        <Route path = "/" element = {<Layout />}>
+          {/* index basically refers that if "/" is hit then it should fetch Home and default will be that only */}
+          <Route index element = {<Home />} />
+          <Route path='/signin' element = {<Signin />} />
+          <Route path='/signup' element = {<Signup />} />
+        </Route>
+        <Route path = "/landing" element = {<Landing />} />
+      </Routes>
+      </BrowserRouter>                            
   )
 }
 
