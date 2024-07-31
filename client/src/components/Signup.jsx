@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
+import SignupImg from "../assets/signup_image.jpg"
 
 const Signup = () => {
   const [isVisible, setisVisible] = useState(false);
@@ -24,7 +25,7 @@ const Signup = () => {
           {/* left-part -> with name, username and password */}
           <div className="w-[50%] max-h-[calc(100% - 7rem)]">
             <div className="w-full text-3xl font-bold tracking-wider">
-              Signup
+              Sign Up
             </div>
             <div className="w-full mt-[2rem]">
               <form
@@ -94,8 +95,8 @@ const Signup = () => {
             </div>
           </div>
           {/* right-part -> with one image */}
-          <div className="w-[50%] max-h-[calc(100% - 7rem) bg-blue-400">
-            right
+          <div className="w-[50%] max-h-[calc(100% - 7rem)">
+            <img src={SignupImg} alt="Image not loaded" />
           </div>
         </div>
       </div>
