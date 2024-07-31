@@ -30,7 +30,7 @@ userRouter.post("/signup", userInputMiddleware, async (req, res) => {
         message: "User is created successfully!!",
       });
     } else {
-      res.status(200).json({
+      res.status(404).json({
         message: "Issue in creating the user!!",
       });
     }

@@ -2,10 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
-import SigninImg from "../assets/signin_img.webp"
+import SigninImg from "../assets/signin_img.webp";
+import PropTypes from "prop-types";
 
-const Signin = () => {
+const Signin = ({username, passUser}) => {
+  
+  // states
   const [isVisible, setisVisible] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handlePwdVisiblity = () => {
     setisVisible(!isVisible);
@@ -13,6 +18,16 @@ const Signin = () => {
   const nav = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // check whether the fields are empty or not
+    if(!email || !password) {
+      alert ("The input fields cannot be empty | Kindly fill to proceed !!");
+      return;
+    }
+
+    // TODO : implement the signin endpoint and if the response token is received then only proceed else show something else
+    passUser(username);
+    nav("/landing");
   };
   return (
     <div className="h-screen w-gull bg-white">
@@ -26,10 +41,15 @@ const Signin = () => {
             <div className="w-full text-3xl font-bold tracking-wider">
               Sign In
             </div>
+            {
+              username ? <div className="w-full text-left pt-[1rem]">Welcome <span className="font-bold tracking-wide">{username}</span>, Kindly, <span className="text-[#f37e6c] underline cursor-pointer">login</span> to proceed!!!</div> : <div></div>
+            }
             <div className="w-full mt-[2rem]">
               <form
                 action="submit"
                 className="flex flex-col gap-[0.5rem] px-[0.5rem]"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 onClick={handleSubmit}
               >
                 <div className="w-full border-[0.5px] rounded-md border-gray-300 flex flex-col px-[0.5rem] bg-white py-[0.3rem]">
@@ -39,6 +59,8 @@ const Signin = () => {
                   <input
                     type="text"
                     className="focus:outline-none focus:border-none"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter you email..."
                   />
                 </div>
@@ -93,4 +115,9 @@ const Signin = () => {
   );
 };
 
+Signin.propTypes = {
+  username : PropTypes.string,
+  passUser : PropTypes.func
+
+}
 export default Signin;

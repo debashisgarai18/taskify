@@ -2,17 +2,60 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
-import SignupImg from "../assets/signup_image.jpg"
+import SignupImg from "../assets/signup_image.jpg";
+import PropTypes from "prop-types";
 
-const Signup = () => {
+const Signup = ({ passUser }) => {
+  // states
   const [isVisible, setisVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const nav = useNavigate();
 
+  // function to handle the visible of the password
   const handlePwdVisiblity = () => {
     setisVisible(!isVisible);
   };
-  const nav = useNavigate();
-  const handleSubmit = (e) => {
+
+  // function for the onsubmit of the form
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // check whether the input fields are empty or not
+    if (!name || !email || !password) {
+      alert("Input Fields cannot be empty !! Please enter to proceed !! ");
+      return;
+    }
+
+    // data for the endpoint
+    const userData = {
+      name: name,
+      uname: email,
+      pwd: password,
+    };
+
+    // posting the data to the signup endpoint in the backend
+    const res = await fetch("http://localhost:3000/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    if (res.status === 200) {
+      alert("The user is created successfully!!");
+      passUser(name);
+      nav("/signin");
+    } else {
+      alert("The user cannot be created | Check the credentials !!");
+      return;
+    }
+
+    // resetting all the input fieds after each submit
+    setName("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -31,7 +74,7 @@ const Signup = () => {
               <form
                 action="submit"
                 className="flex flex-col gap-[0.5rem] px-[0.5rem]"
-                onClick={handleSubmit}
+                onSubmit={handleSubmit}
               >
                 <div className="w-full border-[0.5px] rounded-md border-gray-300 flex flex-col px-[0.5rem] bg-white py-[0.3rem]">
                   <label className="text-xs font-semibold tracking-wide">
@@ -40,6 +83,8 @@ const Signup = () => {
                   <input
                     type="text"
                     className="focus:outline-none focus:border-none"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Enter you name..."
                   />
                 </div>
@@ -50,6 +95,8 @@ const Signup = () => {
                   <input
                     type="text"
                     className="focus:outline-none focus:border-none"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter you email..."
                   />
                 </div>
@@ -60,7 +107,9 @@ const Signup = () => {
                   <div className="w-full flex flex-row justify-between">
                     <input
                       type={isVisible ? "text" : "password"}
+                      value={password}
                       className="focus:outline-none focus:border-none"
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter you password..."
                     />
                     {!isVisible ? (
@@ -102,6 +151,10 @@ const Signup = () => {
       </div>
     </div>
   );
+};
+
+Signup.propTypes = {
+  passUser: PropTypes.func,
 };
 
 export default Signup;
