@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: MuseoModerno
+- Font Author: Copyright 2020 The MuseoModerno Project Authors (https://github.com/Omnibus-Type/MuseoModerno)
+- Font Source: https://fonts.gstatic.com/s/museomoderno/v27/zrf30HnU0_7wWdMrFcWqSEXPVyEaWJ55pTleMlZEuewajeKlCdo.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))
