@@ -21,7 +21,7 @@ function App() {
         <Route path = "/" element = {<Home />} />
         <Route path = "/signup" element = {<Signup passUser = {setUser}/>} />
         <Route path = "/signin" element = {<Signin username = {user} passUser = {setUser}/>} />
-        <Route path = "/landing" element = {<Landing username = {user}/>} />
+        <Route path = "/landing" element = {<Landing />} />
       </Routes>
       </BrowserRouter>                            
   )

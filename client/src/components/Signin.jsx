@@ -32,8 +32,7 @@ const Signin = ({username, passUser}) => {
       uname : email,
       pwd : password
     }
-    
-    console.log(signinData);
+
     const res = await fetch('http://localhost:3000/user/signin', {
       method : "POST",
       headers : {
