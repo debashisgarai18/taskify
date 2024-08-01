@@ -24,7 +24,7 @@ const Signup = ({ passUser }) => {
 
     // check whether the input fields are empty or not
     if (!name || !email || !password) {
-      alert("Input Fields cannot be empty !! Please enter to proceed !! ");
+      alert("The signup input Fields cannot be empty !! Please enter to proceed !! ");
       return;
     }
 

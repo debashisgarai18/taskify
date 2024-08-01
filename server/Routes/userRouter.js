@@ -66,9 +66,8 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
         expiresIn: "1d",
       });
       // TODO:  token to be stored in the cookie using the cookie-parser -> after doing signup signin in frontend
-      res.status(200).json({
-        token: token,
-      });
+      res.cookie("token", token);
+      res.status(200).json(check.name);
     }
   } else {
     res.status(404).json({

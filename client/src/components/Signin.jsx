@@ -16,18 +16,47 @@ const Signin = ({username, passUser}) => {
     setisVisible(!isVisible);
   };
   const nav = useNavigate();
-  const handleSubmit = (e) => {
+
+  // function to handle thte submit feature
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // check whether the fields are empty or not
     if(!email || !password) {
-      alert ("The input fields cannot be empty | Kindly fill to proceed !!");
+      alert ("The signin input fields cannot be empty | Kindly fill to proceed !!");
       return;
     }
 
-    // TODO : implement the signin endpoint and if the response token is received then only proceed else show something else
-    passUser(username);
-    nav("/landing");
+    // data to be pushed to generate the jwtoken for the signin
+    const signinData = {
+      uname : email,
+      pwd : password
+    }
+    
+    console.log(signinData);
+    const res = await fetch('http://localhost:3000/user/signin', {
+      method : "POST",
+      headers : {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify(signinData),
+      credentials : 'include'
+    })
+
+    if(res.status === 200){
+      alert("You are signed in successfully!!");
+      if(username) passUser(username);
+      else{
+        const name = await res.json();
+        passUser(name);
+      }
+      nav("/landing");
+    }
+    else{
+      alert('There is some issue in signing you in!!');
+      return; 
+    }
+
   };
   return (
     <div className="h-screen w-gull bg-white">
@@ -42,16 +71,14 @@ const Signin = ({username, passUser}) => {
               Sign In
             </div>
             {
-              username ? <div className="w-full text-left pt-[1rem]">Welcome <span className="font-bold tracking-wide">{username}</span>, Kindly, <span className="text-[#f37e6c] underline cursor-pointer">login</span> to proceed!!!</div> : <div></div>
+              username && <div className="w-full text-left pt-[1rem]">Welcome <span className="font-bold tracking-wide">{username}</span>, Kindly, <span className="text-[#f37e6c] underline cursor-pointer" onClick={handleSubmit}>login</span> to proceed!!!</div>
             }
             <div className="w-full mt-[2rem]">
               <form
                 action="submit"
                 className="flex flex-col gap-[0.5rem] px-[0.5rem]"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onClick={handleSubmit}
-              >
+                onSubmit={handleSubmit}
+                >
                 <div className="w-full border-[0.5px] rounded-md border-gray-300 flex flex-col px-[0.5rem] bg-white py-[0.3rem]">
                   <label className="text-xs font-semibold tracking-wide">
                     Email
@@ -59,10 +86,10 @@ const Signin = ({username, passUser}) => {
                   <input
                     type="text"
                     className="focus:outline-none focus:border-none"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter you email..."
-                  />
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    />
                 </div>
                 <div className="w-full border-[0.5px] rounded-md border-gray-300 flex flex-col px-[0.5rem] bg-white py-[0.3rem]">
                   <label className="text-xs font-semibold tracking-wide">
@@ -73,6 +100,8 @@ const Signin = ({username, passUser}) => {
                       type={isVisible ? "text" : "password"}
                       className="focus:outline-none focus:border-none"
                       placeholder="Enter you password..."
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     {!isVisible ? (
                       <FaEyeSlash
