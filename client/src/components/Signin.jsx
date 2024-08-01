@@ -44,13 +44,13 @@ const Signin = ({username, passUser}) => {
     })
 
     if(res.status === 200){
-      alert("You are signed in successfully!!");
       if(username) passUser(username);
       else{
         const name = await res.json();
         passUser(name);
       }
       nav("/landing");
+      alert("You are signed in successfully!!");
     }
     else{
       alert('There is some issue in signing you in!!');

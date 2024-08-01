@@ -44,9 +44,9 @@ const Signup = ({ passUser }) => {
       body: JSON.stringify(userData),
     });
     if (res.status === 200) {
-      alert("The user is created successfully!!");
       passUser(name);
       nav("/signin");
+      alert("The user is created successfully!!");
     } else {
       alert("The user cannot be created | Check the credentials !!");
       return;

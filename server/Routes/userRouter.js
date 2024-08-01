@@ -71,10 +71,21 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
     }
   } else {
     res.status(404).json({
-      message: "the user doenot exist || check the username and re-enter!!",
+      message: "the user doesnot exist || check the username and re-enter!!",
     });
   }
 });
+// the endpoint to enter the landing page for a specific user
+userRouter.get("/landing", userValdationMW, async (req, res) => {
+  const name = req.uname;
+  
+  // find the entry with this username
+  const response = await users.findOne({
+    username : name
+  })
+  res.status(200).json(response);
+})
+
 
 // the endpoint to add the tasks
 userRouter.post("/addtasks", userValdationMW, async (req, res) => {
