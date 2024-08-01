@@ -41,7 +41,7 @@ const Landing = () => {
     <div className="w-full h-screen">
       {name ? (
         <div className="w-full h-screen relative">
-          <LandingNavbar updateActive = {setisActive} activeState = {isActive} />
+          <LandingNavbar updateActive = {setisActive} name = {name} />
           <div
           className={`py-[1rem] px-[1rem] w-[15rem] bg-[#F2EAEA] shadow-2xl absolute right-[19%] top-[3.7rem] rounded-md flex flex-col gap-[0.5rem] items-center justify-center ${
             isActive ? "duration-300 ease-out transition-all translate-y-[20%] opacity-1" : "duration-300 ease-out transition-all opacity-0 -translate-y-0"
