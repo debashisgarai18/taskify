@@ -58,9 +58,9 @@ const Maincontent = () => {
   return (
     <div className="w-[60%] h-[470px] m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
       {/* for the top div */}
-      <div className="h-[80%] w-full flex flex-row">
+      <div className="h-[100%] w-full flex flex-row">
         {/* top-left div */}
-        <div className="w-[35%] h-full py-[0.75rem] px-[1rem]">
+        <div className="w-[35%] h-full py-[0.75rem] px-[1rem] flex flex-col">
           <div className="w-full flex flex-col justify-start gap-[0.5rem]">
             <div className="text-2xl capitalize text-[#FF6666]">{day}</div>
             <div className="w-full  text-3xl capitalize font-semibold text-ellipsis">
@@ -86,6 +86,16 @@ const Maincontent = () => {
               }}
             />
           </div>
+          <div className="w-full h-[5rem] mt-[3rem] flex flex-row justify-between">
+            <div className="w-[48%] h-full bg-[#F0D1A8] rounded-md flex flex-col items-center justify-center">
+              <div>Completed Tasks</div>
+              <div>04</div>
+            </div>
+            <div className="w-[48%] h-full bg-[#C4A49F] rounded-md flex flex-col items-center justify-center">
+              <div>Pending Taks</div>
+              <div>15</div>
+            </div>
+          </div>
         </div>
         {/* top-right div */}
         <div className="w-[65%] h-full px-[1rem] py-[0.75rem]">
@@ -110,16 +120,10 @@ const Maincontent = () => {
                 name="Priority"
                 className="h-full text-xs tracking-wide font-bold focus:outline-none cursor-pointer rounded-md px-[0.3rem]"
               >
-                <option
-                  value="high"
-                  className="text-xs tracking-wide"
-                >
+                <option value="high" className="text-xs tracking-wide">
                   High Priority
                 </option>
-                <option
-                  value="less"
-                  className="text-xs tracking-wide"
-                >
+                <option value="less" className="text-xs tracking-wide">
                   Less Priority
                 </option>
               </select>
@@ -136,24 +140,21 @@ const Maincontent = () => {
             </div>
           </div>
           {/* div for the main Tasks */}
-          <div className="w-full grid grid-cols-2 mt-[0.5rem] gap-[1rem]">
+          <div className="w-full h-[270px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
+            <Maintasks />
+            <Maintasks />
+            <Maintasks />
+            <Maintasks />
             <Maintasks />
             <Maintasks />
             <Maintasks />
             <Maintasks />
           </div>
           <div className="w-full mt-[1rem] flex items-center justify-center">
-              <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">Load More</button>
+            <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
+              Load More
+            </button>
           </div>
-        </div>
-      </div>
-      {/* for the bottom div */}
-      <div className="h-[20%] w-full bg-blue-300 flex flex-row justify-between items-center">
-        <div className="w-[40%] h-full bg-red-300">
-
-        </div>
-        <div className="w-[55%] h-full bg-green-300">
-
         </div>
       </div>
     </div>
