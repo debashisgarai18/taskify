@@ -56,20 +56,20 @@ const Maincontent = () => {
   }, [selectedDate]);
 
   return (
-    <div className="w-[60%] h-[470px] m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
+    <div className="w-[60%] h-[630px] m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
       {/* for the top div */}
       <div className="h-[100%] w-full flex flex-row">
         {/* top-left div */}
-        <div className="w-[35%] h-full py-[0.75rem] px-[1rem] flex flex-col">
+        <div className="w-[35%] py-[0.75rem] px-[1rem] flex flex-col">
           <div className="w-full flex flex-col justify-start gap-[0.5rem]">
-            <div className="text-2xl capitalize text-[#FF6666]">{day}</div>
-            <div className="w-full  text-3xl capitalize font-semibold text-ellipsis">
+            <div className="text-3xl capitalize text-[#FF6666]">{day}</div>
+            <div className="w-full  text-4xl capitalize font-semibold text-ellipsis">
               {date}
             </div>
           </div>
-          <div className="w-full pt-[0.75rem]">
+          <div className="w-full pt-[1.5rem]">
             <Calendar
-              className="w-full text-center flex flex-col gap-[0.5rem] bg-white rounded-md"
+              className="w-full text-center flex flex-col gap-[0.5rem] bg-white rounded-md text-lg"
               value={selectedDate}
               onChange={handleCalendarChange}
               tileClassName={({ date, view }) => {
@@ -79,14 +79,14 @@ const Maincontent = () => {
                     date.getMonth() === selectedDate.getMonth() &&
                     date.getFullYear() === selectedDate.getFullYear()
                   ) {
-                    return "bg-[#FF6666] text-black rounded-md font-semibold text-xs";
+                    return "bg-[#FF6666] text-black rounded-md font-semibold text-xl";
                   }
                 }
-                return "hover:bg-[#FAF7F2] cursor-pointer py-[0.3rem] rounded-md text-xs";
+                return "hover:bg-[#FAF7F2] cursor-pointer py-[1rem] rounded-md";
               }}
             />
           </div>
-          <div className="w-full h-[5rem] mt-[3rem] flex flex-row justify-between">
+          <div className="w-full h-[5rem] mt-[1.75rem] flex flex-row justify-between">
             <div className="w-[48%] h-full bg-[#F0D1A8] rounded-md flex flex-col items-center justify-center px-[1rem]">
               <div className="font-semibold uppercase text-sm text-center">Completed Tasks</div>
               <div className="font-extrabold text-3xl">04</div>
@@ -114,16 +114,16 @@ const Maincontent = () => {
               <div className="h-full w-full">+</div>
             </button>
           </div>
-          <div className="w-full h-[2rem] mt-[0.75rem] flex items-center justify-between">
+          <div className="w-full h-[2.5rem] mt-[0.75rem] flex items-center justify-between">
             <div className="h-full">
               <select
                 name="Priority"
-                className="h-full text-xs tracking-wide font-bold focus:outline-none cursor-pointer rounded-md px-[0.3rem]"
+                className="h-full text-sm tracking-wide font-bold focus:outline-none cursor-pointer rounded-md px-[0.3rem]"
               >
-                <option value="high" className="text-xs tracking-wide">
+                <option value="high" className="text-sm tracking-wide">
                   High Priority
                 </option>
-                <option value="less" className="text-xs tracking-wide">
+                <option value="less" className="text-sm tracking-wide">
                   Less Priority
                 </option>
               </select>
@@ -134,13 +134,13 @@ const Maincontent = () => {
                 placeholder="Search by name"
                 className="bg-white h-full px-[0.5rem] text-xs rounded-tl-md rounded-bl-md focus:outline-none border-2 border-l-[#F2B258] border-t-[#F2B258] border-b-[#F2B258] outline-none"
               />
-              <button className="h-full bg-white border-2 rounded-tr-md rounded-br-md border-r-[#F2B258] px-[0.5rem] border-t-[#F2B258] border-b-[#F2B258] absolute right-0">
+              <button className="h-full bg-white border-2 rounded-tr-md rounded-br-md border-r-[#F2B258] px-[0.5rem] border-t-[#F2B258] border-b-[#F2B258] absolute right-5">
                 <IoSearchSharp />
               </button>
             </div>
           </div>
           {/* div for the main Tasks */}
-          <div className="w-full h-[270px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
+          <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
             <Maintasks />
             <Maintasks />
             <Maintasks />

@@ -5,7 +5,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 const Maintasks = () => {
   return (
-    <div className="w-full h-[5rem] bg-[#F2B258] rounded-md pl-[1rem] pr-[0.5rem] py-[0.5rem] flex">
+    <div className="w-full h-[7rem] bg-[#F2B258] rounded-md pl-[1rem] pr-[0.5rem] py-[0.5rem] flex">
       <div className="w-[70%] h-full">
         <div className="w-full h-[80%] text-xs flex flex-col gap-[0.33rem]">
           <div className="font-bold tracking-wider">Learning ReactJS</div>
