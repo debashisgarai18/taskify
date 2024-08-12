@@ -87,13 +87,13 @@ const Maincontent = () => {
             />
           </div>
           <div className="w-full h-[5rem] mt-[3rem] flex flex-row justify-between">
-            <div className="w-[48%] h-full bg-[#F0D1A8] rounded-md flex flex-col items-center justify-center">
-              <div>Completed Tasks</div>
-              <div>04</div>
+            <div className="w-[48%] h-full bg-[#F0D1A8] rounded-md flex flex-col items-center justify-center px-[1rem]">
+              <div className="font-semibold uppercase text-sm text-center">Completed Tasks</div>
+              <div className="font-extrabold text-3xl">04</div>
             </div>
-            <div className="w-[48%] h-full bg-[#C4A49F] rounded-md flex flex-col items-center justify-center">
-              <div>Pending Taks</div>
-              <div>15</div>
+            <div className="w-[48%] h-full bg-[#C4A49F] rounded-md flex flex-col items-center justify-center px-[1rem]">
+              <div className="font-semibold uppercase text-sm text-center">Pending Tasks</div>
+              <div className="font-extrabold text-3xl">15</div>
             </div>
           </div>
         </div>
