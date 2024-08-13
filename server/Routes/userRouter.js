@@ -65,9 +65,11 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
       const token = jwt.sign({ username: check.username }, JWT_SECRET, {
         expiresIn: "1d",
       });
-      // TODO:  token to be stored in the cookie using the cookie-parser -> after doing signup signin in frontend
-      res.cookie("token", token);
-      res.status(200).json(check.name);
+      res.status(200).json({
+        message : token
+      })
+      // res.cookie("token", token);
+      // res.status(200).json(check.name);
     }
   } else {
     res.status(404).json({
@@ -111,7 +113,7 @@ userRouter.post("/addtasks", userValdationMW, async (req, res) => {
 // the endpoint to actually add the tasks to the sepcific userarray
 userRouter.post("/addtasks/:taskId", userValdationMW, async (req, res) => {
     const taskId = req.params.taskId;
-    const username = req.headers.username;
+    const username = req.headers.uname;
 
     const update = await users.findOneAndUpdate({
       username : username  
@@ -133,5 +135,28 @@ userRouter.post("/addtasks/:taskId", userValdationMW, async (req, res) => {
     }
 })
 
+// get all the tasks for the specific user
+userRouter.get("/showtasks", userValdationMW, async (req, res) => {
+    const uId = req.headers.uname;
+
+    const response = await users.findOne({
+      username : uId 
+    });
+
+    if(response){
+      const data = await tasks.find({
+        _id : {
+          "$in" : response.assignedTasks
+        }
+      })
+      console.log(data)
+      res.status(200).json(data);
+    }
+    else{
+      res.status(400).json({
+        message : "There is some issue in generating the data"
+      })
+    }
+})
 
 module.exports = userRouter;
