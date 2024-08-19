@@ -51,7 +51,7 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
   });
   if (check) {
     // decrypt the password
-    const decodePwd = await bcrypt.compare(pwd, check.password);
+    const decodePwd = bcrypt.compare(pwd, check.password);
 
     if (!decodePwd) {
       res
@@ -68,8 +68,7 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
       res.status(200).json({
         message : token
       })
-      // res.cookie("token", token);
-      // res.status(200).json(check.name);
+      res.cookie("token", token);
     }
   } else {
     res.status(404).json({
@@ -77,6 +76,7 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
     });
   }
 });
+
 // the endpoint to enter the landing page for a specific user
 userRouter.get("/landing", userValdationMW, async (req, res) => {
   const name = req.uname;
@@ -149,7 +149,7 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
           "$in" : response.assignedTasks
         }
       })
-      console.log(data)
+      console.log(data);
       res.status(200).json(data);
     }
     else{
