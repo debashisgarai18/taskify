@@ -26,8 +26,11 @@ userRouter.post("/signup", userInputMiddleware, async (req, res) => {
       password: hashedPwd,
     });
     if (response) {
+      // console.log(response._id);
+      const token = jwt.sign({userId : response._id}, JWT_SECRET);
       res.status(200).json({
-        message: "User is created successfully!!",
+        token: token,
+        userId : response._id
       });
     } else {
       res.status(404).json({
@@ -62,13 +65,10 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
     }
     // if the password is correct we'll proceed to the generation of the jwt token
     else {
-      const token = jwt.sign({ username: check.username }, JWT_SECRET, {
-        expiresIn: "1d",
-      });
+      const token = jwt.sign({ userId: check._id }, JWT_SECRET);
       res.status(200).json({
-        message : token
+        token : token
       })
-      res.cookie("token", token);
     }
   } else {
     res.status(404).json({
@@ -79,13 +79,15 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
 
 // the endpoint to enter the landing page for a specific user
 userRouter.get("/landing", userValdationMW, async (req, res) => {
-  const name = req.uname;
+  const userId = req.userId;
   
   // find the entry with this username
   const response = await users.findOne({
-    username : name
+    _id : userId
   })
-  res.status(200).json(response);
+  res.status(200).json({
+    user : response.name
+  });
 })
 
 

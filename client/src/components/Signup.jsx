@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
 import SignupImg from "../assets/signup_image.jpg";
-import PropTypes from "prop-types";
 
-const Signup = ({ passUser }) => {
+
+const Signup = () => {
   // states
   const [isVisible, setisVisible] = useState(false);
   const [name, setName] = useState("");
@@ -44,8 +44,9 @@ const Signup = ({ passUser }) => {
       body: JSON.stringify(userData),
     });
     if (res.status === 200) {
-      passUser(name);
-      nav("/signin");
+      const data = await res.json();
+      nav("/landing");
+      localStorage.setItem("token", data.token);
       alert("The user is created successfully!!");
     } else {
       alert("The user cannot be created | Check the credentials !!");
@@ -153,8 +154,5 @@ const Signup = ({ passUser }) => {
   );
 };
 
-Signup.propTypes = {
-  passUser: PropTypes.func,
-};
 
 export default Signup;

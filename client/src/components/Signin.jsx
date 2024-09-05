@@ -5,8 +5,7 @@ import { FaEye } from "react-icons/fa6";
 import SigninImg from "../assets/signin_img.webp";
 import PropTypes from "prop-types";
 
-const Signin = ({username, passUser}) => {
-  
+const Signin = () => {
   // states
   const [isVisible, setisVisible] = useState(false);
   const [email, setEmail] = useState("");
@@ -22,40 +21,37 @@ const Signin = ({username, passUser}) => {
     e.preventDefault();
 
     // check whether the fields are empty or not
-    if(!email || !password) {
-      alert ("The signin input fields cannot be empty | Kindly fill to proceed !!");
+    if (!email || !password) {
+      alert(
+        "The signin input fields cannot be empty | Kindly fill to proceed !!"
+      );
       return;
     }
 
     // data to be pushed to generate the jwtoken for the signin
     const signinData = {
-      uname : email,
-      pwd : password
-    }
+      uname: email,
+      pwd: password,
+    };
 
-    const res = await fetch('http://localhost:3000/user/signin', {
-      method : "POST",
-      headers : {
-        'Content-Type' : 'application/json'
+    const res = await fetch("http://localhost:3000/user/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(signinData),
-      credentials : 'include'
-    })
+      credentials: "include",
+    });
 
-    if(res.status === 200){
-      if(username) passUser(username);
-      else{
-        const name = await res.json();
-        passUser(name);
-      }
+    if (res.status === 200) {
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
       nav("/landing");
       alert("You are signed in successfully!!");
+    } else {
+      alert("There is some issue in signing you in!!");
+      return;
     }
-    else{
-      alert('There is some issue in signing you in!!');
-      return; 
-    }
-
   };
   return (
     <div className="h-screen w-gull bg-white">
@@ -69,15 +65,12 @@ const Signin = ({username, passUser}) => {
             <div className="w-full text-3xl font-bold tracking-wider">
               Sign In
             </div>
-            {
-              username && <div className="w-full text-left pt-[1rem]">Welcome <span className="font-bold tracking-wide">{username}</span>, Kindly, <span className="text-[#f37e6c] underline cursor-pointer" onClick={handleSubmit}>login</span> to proceed!!!</div>
-            }
             <div className="w-full mt-[2rem]">
               <form
                 action="submit"
                 className="flex flex-col gap-[0.5rem] px-[0.5rem]"
                 onSubmit={handleSubmit}
-                >
+              >
                 <div className="w-full border-[0.5px] rounded-md border-gray-300 flex flex-col px-[0.5rem] bg-white py-[0.3rem]">
                   <label className="text-xs font-semibold tracking-wide">
                     Email
@@ -88,7 +81,7 @@ const Signin = ({username, passUser}) => {
                     placeholder="Enter you email..."
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    />
+                  />
                 </div>
                 <div className="w-full border-[0.5px] rounded-md border-gray-300 flex flex-col px-[0.5rem] bg-white py-[0.3rem]">
                   <label className="text-xs font-semibold tracking-wide">
@@ -144,8 +137,7 @@ const Signin = ({username, passUser}) => {
 };
 
 Signin.propTypes = {
-  username : PropTypes.string,
-  passUser : PropTypes.func
-
-}
+  username: PropTypes.string,
+  passUser: PropTypes.func,
+};
 export default Signin;

@@ -2,9 +2,8 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
 
 const userValdationMW = (req, res, next) => {
-  const token = req.cookies.token;
-  // const token = req.headers.authorization;
-  console.log(token);
+  const token = req.headers.authorization;
+  
   if (!token) {
     res.status(404).json({
       message: "No token Provided!!",
@@ -15,7 +14,7 @@ const userValdationMW = (req, res, next) => {
 
     if (decode) {
       // passing the value to the next
-      req.headers.uname = decode.username;
+      req.userId = decode.userId;
       next();
     } else {
       res.status(404).json({
