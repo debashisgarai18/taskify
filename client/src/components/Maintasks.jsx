@@ -1,17 +1,16 @@
-import React from "react";
 import { RiCheckboxCircleLine } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import PropTypes from 'prop-types'
 
-const Maintasks = () => {
+const Maintasks = ({taskName, desc}) => {
   return (
     <div className="w-full h-[7rem] bg-[#F2B258] rounded-md pl-[1rem] pr-[0.5rem] py-[0.5rem] flex">
       <div className="w-[70%] h-full">
         <div className="w-full h-[80%] text-xs flex flex-col gap-[0.33rem]">
-          <div className="font-bold tracking-wider">Learning ReactJS</div>
+          <div className="font-bold tracking-wider">{taskName}</div>
           <div className="text-[8px] leading-none">
-            Complete the State management by Context API and Recoil part in
-            React
+            {desc}
           </div>
         </div>
         <div className="w-full h-[20%] text-xs font-bold tracking-wider">
@@ -26,5 +25,10 @@ const Maintasks = () => {
     </div>
   );
 };
+
+Maintasks.propTypes = {
+  taskName : PropTypes.string,
+  desc : PropTypes.string
+}
 
 export default Maintasks;
