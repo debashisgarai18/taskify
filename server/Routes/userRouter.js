@@ -27,10 +27,10 @@ userRouter.post("/signup", userInputMiddleware, async (req, res) => {
     });
     if (response) {
       // console.log(response._id);
-      const token = jwt.sign({userId : response._id}, JWT_SECRET);
+      const token = jwt.sign({ userId: response._id }, JWT_SECRET);
       res.status(200).json({
         token: token,
-        userId : response._id
+        userId: response._id,
       });
     } else {
       res.status(404).json({
@@ -67,8 +67,8 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
     else {
       const token = jwt.sign({ userId: check._id }, JWT_SECRET);
       res.status(200).json({
-        token : token
-      })
+        token: token,
+      });
     }
   } else {
     res.status(404).json({
@@ -80,85 +80,91 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
 // the endpoint to enter the landing page for a specific user
 userRouter.get("/landing", userValdationMW, async (req, res) => {
   const userId = req.userId;
-  
+
   // find the entry with this username
   const response = await users.findOne({
-    _id : userId
-  })
-  res.status(200).json({
-    user : response.name
+    _id: userId,
   });
-})
-
+  res.status(200).json({
+    user: response.name,
+  });
+});
 
 // the endpoint to add the tasks
 userRouter.post("/addtasks", userValdationMW, async (req, res) => {
-    const {tname, desc} = req.body;
+  const { tname, desc } = req.body;
 
-    // push the data in the DB
-    const response = await tasks.create({
-        taskName : tname,
-        description : desc
-    })
-    if(response){
-        res.status(200).json({
-          task_id : response._id
-        })
-    }
-    else{
-        res.status(404).json({
-            message : "There is some issue in pushing the tasks in the DB"
-        })
-    }
-})
+  // push the data in the DB
+  const response = await tasks.create({
+    taskName: tname,
+    description: desc,
+  });
+  if (response) {
+    res.status(200).json({
+      task_id: response._id,
+    });
+  } else {
+    res.status(404).json({
+      message: "There is some issue in pushing the tasks in the DB",
+    });
+  }
+});
 
 // the endpoint to actually add the tasks to the sepcific userarray
 userRouter.post("/addtasks/:taskId", userValdationMW, async (req, res) => {
-    const taskId = req.params.taskId;
-    const username = req.headers.uname;
+  const taskId = req.params.taskId;
+  const userId = req.userId;
 
-    const update = await users.findOneAndUpdate({
-      username : username  
-    },{
-      "$push" : {
-        assignedTasks : taskId
-      }
-    })
+  const update = await users.findOneAndUpdate(
+    {
+      _id: userId,
+    },
+    {
+      $push: {
+        assignedTasks: taskId,
+      },
+    }
+  );
 
-    if(update) {
-      res.status(200).json({
-        message : "The user is updated with the task!!"
-      })
-    }
-    else{
-      res.status(404).json({
-        message : "There is some issue in updating the tasks!"
-      })
-    }
-})
+  if (update) {
+    res.status(200).json({
+      message: "The user is updated with the task!!",
+    });
+  } else {
+    res.status(404).json({
+      message: "There is some issue in updating the tasks!",
+    });
+  }
+});
 
 // get all the tasks for the specific user
 userRouter.get("/showtasks", userValdationMW, async (req, res) => {
-    const uId = req.headers.uname;
+  const uId = req.userId;
 
-    const response = await users.findOne({
-      username : uId 
+  const response = await users.findOne({
+    _id: uId,
+  });
+
+  if (response) {
+    const data = await tasks.find({
+      _id: {
+        $in: response.assignedTasks,
+      },
     });
 
-    if(response){
-      const data = await tasks.find({
-        _id : {
-          "$in" : response.assignedTasks
-        }
-      })
-      console.log(data);
-      res.status(200).json(data);
-    }
-    else{
-      res.status(400).json({
-        message : "There is some issue in generating the data"
-      })
-    }
-})
+    res.status(200).json({
+      all_tasks: data.map((e) => {
+        return {
+          task: e.taskName,
+          desc: e.description,
+        };
+      }),
+    });
+  } else {
+    res.status(400).json({
+      message: "There is some issue in generating the data",
+    });
+  }
+});
 
 module.exports = userRouter;
