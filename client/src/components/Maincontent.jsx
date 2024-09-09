@@ -213,9 +213,10 @@ const Maincontent = () => {
           </div>
           {/* div for the main Tasks */}
           <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
-            {/* {allTask.all_tasks.map((e) => {
-              <Maintasks taskName={e.task} desc={e.desc} />;
-            })} */}
+            {allTask.all_tasks.map((e, idx) => (
+              <Maintasks key={idx} taskName={e.task} desc={e.desc} />
+            )
+            )}
           </div>
           <div className="w-full mt-[1rem] flex items-center justify-center">
             <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
