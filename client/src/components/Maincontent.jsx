@@ -92,6 +92,8 @@ const Maincontent = () => {
       }
     );
     console.log(updateTask.data);
+    setTaskName("");
+    setTaskDesc("");
     alert("task created successfully!!");
   };
 
