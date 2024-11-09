@@ -167,4 +167,10 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
   }
 });
 
+// todo : implement the me endpoint for all the auth routes
+// todo : add a route in which the user can mark their tasks in the low / high priority
+// todo : add an endpoint to mark the tasks completed for user
+// todo : endpoint to filter the tasks on the basis of searched string 
+// todo : add endpoint show tasks on the basis of given start date
+
 module.exports = userRouter;

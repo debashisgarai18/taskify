@@ -63,8 +63,11 @@ const Landing = () => {
             </button>
           </div>
           <div className="w-[60%] m-auto pt-[2rem] text-center text-5xl tracking-wide font-semibold">
-            Hello, <span className="uppercase text-[#f37e6c]">{name}</span>,{" "}
-            <span className="text-[#585858]">Start planning today</span>
+            Hello,{" "}
+            <span className="uppercase text-[#f37e6c]">
+              {name.split(" ")[0]}
+            </span>
+            , <span className="text-[#585858]">Start planning today</span>
           </div>
 
           <Maincontent />

@@ -8,12 +8,10 @@ const userSchema = new mongoose.Schema({
   name: String,
   username: String,
   password: String,
-  assignedTasks: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref : 'Tasks'
-  }]
+  assignedTasks: [taskSchema]
 });
 
+// todo : update the tasks schema with the start date, completed, priority stuff
 // defifing the taskSchema, which will accept the taskname and the description from the user
 const taskSchema = new mongoose.Schema({
   taskName: String,

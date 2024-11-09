@@ -22,44 +22,45 @@ const Maincontent = () => {
   };
 
   // get date function
-  const getDate = () => {
-    const date = selectedDate;
-
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "august",
-      "september",
-      "october",
-      "november",
-      "december",
-    ];
-    const dayNames = [
-      "sunday",
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-    ];
-    const dt = date.getDate();
-
-    setDay(dayNames[date.getDay()]);
-    setDate(
-      `${String(dt).padStart(2, "0")}, ${
-        monthNames[date.getMonth()]
-      } ${date.getFullYear()}`
-    );
-  };
 
   // should run when the component mounts and the date state changes
   useEffect(() => {
+    const getDate = () => {
+      const date = selectedDate;
+
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "august",
+        "september",
+        "october",
+        "november",
+        "december",
+      ];
+      const dayNames = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      ];
+      const dt = date.getDate();
+
+      setDay(dayNames[date.getDay()]);
+      setDate(
+        `${String(dt).padStart(2, "0")}, ${
+          monthNames[date.getMonth()]
+        } ${date.getFullYear()}`
+      );
+    };
+
     getDate();
   }, [selectedDate]);
 
@@ -105,7 +106,7 @@ const Maincontent = () => {
       },
     });
 
-    setAllTask(res.data)
+    setAllTask(res.data);
   };
 
   // useEffect to render all the tasks for the specific user
@@ -129,6 +130,7 @@ const Maincontent = () => {
             </div>
           </div>
           <div className="w-full pt-[1.5rem]">
+            {/* // todo : add calendar from the material UI */}
             <Calendar
               className="w-full text-center flex flex-col gap-[0.5rem] bg-white rounded-md text-lg"
               value={selectedDate}
@@ -213,10 +215,10 @@ const Maincontent = () => {
           </div>
           {/* div for the main Tasks */}
           <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
-            {allTask.all_tasks.map((e, idx) => (
-              <Maintasks key={idx} taskName={e.task} desc={e.desc} />
-            )
-            )}
+            {allTask &&
+              allTask.all_tasks?.map((e, idx) => (
+                <Maintasks key={idx} taskName={e.task} desc={e.desc} />
+              ))}
           </div>
           <div className="w-full mt-[1rem] flex items-center justify-center">
             <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
