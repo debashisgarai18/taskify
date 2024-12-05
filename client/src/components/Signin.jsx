@@ -54,14 +54,17 @@ const Signin = () => {
     }
   };
   return (
-    <div className="h-screen w-gull bg-white">
-      <div className="w-[50%] h-full m-auto">
-        <nav className="text-2xl font-bold tracking-widest uppercase h-[4rem] w-full flex items-center">
+    <div className="h-screen w-full bg-white">
+      <div className="w-full md:w-[50%] h-full m-auto md:px-0 px-[1rem]">
+        <nav
+          className="text-2xl font-bold tracking-widest uppercase h-[4rem] w-full flex items-center cursor-pointer"
+          onClick={() => nav("/")}
+        >
           taskify
         </nav>
         <div className="w-full h-[calc(100%-4rem)] flex flex-row pt-[7rem] gap-[1rem]">
           {/* left-part -> with username and password */}
-          <div className="w-[50%] max-h-[calc(100% - 7rem)]">
+          <div className="w-full md:w-[50%] ">
             <div className="w-full text-3xl font-bold tracking-wider">
               Sign In
             </div>
@@ -127,7 +130,7 @@ const Signin = () => {
             </div>
           </div>
           {/* right-part -> with one image */}
-          <div className="w-[50%] max-h-[calc(100% - 7rem)">
+          <div className="w-[50%] hidden md:block ">
             <img src={SigninImg} alt="Image not loaded" />
           </div>
         </div>

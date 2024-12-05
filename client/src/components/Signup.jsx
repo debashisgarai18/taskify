@@ -4,7 +4,6 @@ import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
 import SignupImg from "../assets/signup_image.jpg";
 
-
 const Signup = () => {
   // states
   const [isVisible, setisVisible] = useState(false);
@@ -24,7 +23,9 @@ const Signup = () => {
 
     // check whether the input fields are empty or not
     if (!name || !email || !password) {
-      alert("The signup input Fields cannot be empty !! Please enter to proceed !! ");
+      alert(
+        "The signup input Fields cannot be empty !! Please enter to proceed !! "
+      );
       return;
     }
 
@@ -60,14 +61,17 @@ const Signup = () => {
   };
 
   return (
-    <div className="h-screen w-gull bg-white">
-      <div className="w-[50%] h-full m-auto">
-        <nav className="text-2xl font-bold tracking-widest uppercase h-[4rem] w-full flex items-center">
+    <div className="h-screen w-full bg-white">
+      <div className="w-full px-[1rem] md:px-0 md:w-[50%] h-full m-auto">
+        <nav
+          className="text-2xl font-bold tracking-widest uppercase h-[4rem] w-full flex items-center cursor-pointer"
+          onClick={() => nav("/")}
+        >
           taskify
         </nav>
         <div className="w-full h-[calc(100%-4rem)] flex flex-row pt-[7rem]">
           {/* left-part -> with name, username and password */}
-          <div className="w-[50%] max-h-[calc(100% - 7rem)]">
+          <div className="md:w-[50%] w-full">
             <div className="w-full text-3xl font-bold tracking-wider">
               Sign Up
             </div>
@@ -145,7 +149,7 @@ const Signup = () => {
             </div>
           </div>
           {/* right-part -> with one image */}
-          <div className="w-[50%] max-h-[calc(100% - 7rem)">
+          <div className="w-[50%] hidden md:block">
             <img src={SignupImg} alt="Image not loaded" />
           </div>
         </div>
@@ -153,6 +157,5 @@ const Signup = () => {
     </div>
   );
 };
-
 
 export default Signup;
