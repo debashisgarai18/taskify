@@ -85,11 +85,20 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
       });
     }
   } catch (err) {
-    return res.stautus(500).json({
+    return res.status(500).json({
       message: `Some internal server error : ${err}`,
     });
   }
 });
+
+// me endpoint
+userRouter.get("/me", userInputMiddleware, async (req, res) => {
+  const userId = req.userId;
+  return res.status(200).json({
+    user : userId,
+    message : "User is authenticated"
+  })
+})
 
 // the endpoint to enter the landing page for a specific user
 userRouter.get("/landing", userValdationMW, async (req, res) => {
@@ -102,7 +111,7 @@ userRouter.get("/landing", userValdationMW, async (req, res) => {
   res.status(200).json({
     user: response.name,
   });
-});
+});7
 
 // the endpoint to add the tasks
 userRouter.post("/addtasks", userValdationMW, async (req, res) => {
@@ -188,4 +197,3 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
 // todo : add endpoint show tasks on the basis of given start date
 
 module.exports = userRouter;
-
