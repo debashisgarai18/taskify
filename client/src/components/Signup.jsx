@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
 import SignupImg from "../assets/signup_image.jpg";
+import axios from 'axios'
+import { toast } from "react-toastify";
 
 const Signup = () => {
   // states
@@ -36,28 +38,33 @@ const Signup = () => {
       pwd: password,
     };
 
-    // posting the data to the signup endpoint in the backend
-    const res = await fetch("http://localhost:3000/user/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    if (res.status === 200) {
-      const data = await res.json();
-      nav("/landing");
-      localStorage.setItem("token", data.token);
-      alert("The user is created successfully!!");
-    } else {
-      alert("The user cannot be created | Check the credentials !!");
-      return;
+    // // posting the data to the signup endpoint in the backend
+    // const res = await fetch("http://localhost:3000/api/v1/user/signup", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(userData),
+    // });
+    // if (res.status === 200) {
+    //   const data = await res.json();
+    //   nav("/landing");
+    //   localStorage.setItem("token", data.token);
+    //   alert("The user is created successfully!!");
+    // } else {
+    //   alert("The user cannot be created | Check the credentials !!");
+    //   return;
+    // }
+    try{
+      const resp = await axios.post('http://localhost:3000/api/v1/user/signup', userData);
+      if(resp){
+        localStorage.setItem("token", resp.data.token)
+        nav(`/landing?user=${resp.data.user}`)
+      }
     }
-
-    // resetting all the input fieds after each submit
-    setName("");
-    setEmail("");
-    setPassword("");
+    catch(err){
+      toast(`Error : ${err}`)
+    }
   };
 
   return (
