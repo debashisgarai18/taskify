@@ -5,6 +5,7 @@ import { FaEye } from "react-icons/fa6";
 import SignupImg from "../assets/signup_image.jpg";
 import axios from 'axios'
 import { toast } from "react-toastify";
+import { BACKEND_URL } from "../../config";
 
 const Signup = () => {
   // states
@@ -56,7 +57,7 @@ const Signup = () => {
     //   return;
     // }
     try{
-      const resp = await axios.post('http://localhost:3000/api/v1/user/signup', userData);
+      const resp = await axios.post(`${BACKEND_URL}user/signup`, userData);
       if(resp){
         localStorage.setItem("token", resp.data.token)
         nav(`/landing?user=${resp.data.user}`)
