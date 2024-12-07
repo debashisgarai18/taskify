@@ -31,6 +31,7 @@ userRouter.post("/signup", userInputMiddleware, async (req, res) => {
           // console.log(response._id);
           const token = jwt.sign({ userId: response._id }, JWT_SECRET);
           return res.status(200).json({
+            user: response._id,
             token: token,
             message: "The user is created",
           });
@@ -77,6 +78,8 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
         const token = jwt.sign({ userId: check._id }, JWT_SECRET);
         return res.status(200).json({
           token: token,
+          user: check._id,
+          message: "User is signed in",
         });
       }
     } else {
@@ -92,13 +95,13 @@ userRouter.post("/signin", userInputMiddleware, async (req, res) => {
 });
 
 // me endpoint
-userRouter.get("/me", userInputMiddleware, async (req, res) => {
+userRouter.get("/me", userValdationMW, async (req, res) => {
   const userId = req.userId;
   return res.status(200).json({
-    user : userId,
-    message : "User is authenticated"
-  })
-})
+    user: userId,
+    message: "User is authenticated",
+  });
+});
 
 // the endpoint to enter the landing page for a specific user
 userRouter.get("/landing", userValdationMW, async (req, res) => {
@@ -109,9 +112,9 @@ userRouter.get("/landing", userValdationMW, async (req, res) => {
     _id: userId,
   });
   res.status(200).json({
-    user: response.name,
+    user: response,
   });
-});7
+});
 
 // the endpoint to add the tasks
 userRouter.post("/addtasks", userValdationMW, async (req, res) => {
@@ -190,7 +193,6 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
   }
 });
 
-// todo : implement the me endpoint for all the auth routes
 // todo : add a route in which the user can mark their tasks in the low / high priority
 // todo : add an endpoint to mark the tasks completed for user
 // todo : endpoint to filter the tasks on the basis of searched string
