@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
 import SignupImg from "../assets/signup_image.jpg";
-import axios from 'axios'
+import axios from "axios";
 import { toast } from "react-toastify";
 import { BACKEND_URL } from "../../config";
+import { useEffect } from "react";
 
 const Signup = () => {
   // states
@@ -20,15 +21,46 @@ const Signup = () => {
     setisVisible(!isVisible);
   };
 
+  // check for the me endpoint
+  useEffect(() => {
+    (async function check() {
+      if (localStorage.getItem("token")) {
+        try {
+          const resp = await axios.get(`${BACKEND_URL}user/me`, {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          });
+          if (resp) {
+            toast.success("User is already signed in");
+            nav(`/landing?user=${resp.data.user}`);
+          }
+        } catch (err) {
+          console.log(`Some error : ${err.response.data.message}`);
+        }
+      }
+    })();
+  }, [nav]);
+
   // function for the onsubmit of the form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // check whether the input fields are empty or not
     if (!name || !email || !password) {
-      alert(
-        "The signup input Fields cannot be empty !! Please enter to proceed !! "
-      );
+      // toast(
+      //   "The signup input fields cannot be empty !! Please enter to proceed !! "
+      // );
+      toast.error("The input fields cannot be empty  ", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
 
@@ -39,32 +71,15 @@ const Signup = () => {
       pwd: password,
     };
 
-    // // posting the data to the signup endpoint in the backend
-    // const res = await fetch("http://localhost:3000/api/v1/user/signup", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(userData),
-    // });
-    // if (res.status === 200) {
-    //   const data = await res.json();
-    //   nav("/landing");
-    //   localStorage.setItem("token", data.token);
-    //   alert("The user is created successfully!!");
-    // } else {
-    //   alert("The user cannot be created | Check the credentials !!");
-    //   return;
-    // }
-    try{
+    try {
       const resp = await axios.post(`${BACKEND_URL}user/signup`, userData);
-      if(resp){
-        localStorage.setItem("token", resp.data.token)
-        nav(`/landing?user=${resp.data.user}`)
+      if (resp) {
+        localStorage.setItem("token", `Bearer ${resp.data.token}`);
+        toast.success("User Signed Up");
+        nav(`/landing?user=${resp.data.user}`);
       }
-    }
-    catch(err){
-      toast(`Error : ${err}`)
+    } catch (err) {
+      toast(`Error : ${err}`);
     }
   };
 

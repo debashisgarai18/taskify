@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
 import SigninImg from "../assets/signin_img.webp";
 import PropTypes from "prop-types";
+import { BACKEND_URL } from "../../config";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Signin = () => {
   // states
@@ -15,6 +18,27 @@ const Signin = () => {
     setisVisible(!isVisible);
   };
   const nav = useNavigate();
+
+  // check for the me endpoint
+  useEffect(() => {
+    (async function check() {
+      if (localStorage.getItem("token")) {
+        try {
+          const resp = await axios.get(`${BACKEND_URL}user/me`, {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          });
+          if (resp) {
+            toast.success("User is already signed in")
+            nav(`/landing?user=${resp.data.user}`);
+          }
+        } catch (err) {
+          console.log(`Some error : ${err.response.data.message}`);
+        }
+      }
+    })();
+  }, [nav]);
 
   // function to handle thte submit feature
   const handleSubmit = async (e) => {
@@ -34,23 +58,15 @@ const Signin = () => {
       pwd: password,
     };
 
-    const res = await fetch("http://localhost:3000/user/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(signinData),
-      credentials: "include",
-    });
-
-    if (res.status === 200) {
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      nav("/landing");
-      alert("You are signed in successfully!!");
-    } else {
-      alert("There is some issue in signing you in!!");
-      return;
+    try {
+      const resp = await axios.post(`${BACKEND_URL}user/signin`, signinData);
+      if (resp) {
+        localStorage.setItem("token", `Bearer ${resp.data.token}`);
+        toast.success("User Signed In");
+        nav(`/landing?user=${resp.data.user}`);
+      }
+    } catch (err) {
+      toast.error(`Error : ${err.response.data.message}`);
     }
   };
   return (
