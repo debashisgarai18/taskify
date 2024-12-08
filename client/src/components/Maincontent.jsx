@@ -1,13 +1,37 @@
 import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
 import { IoSearchSharp } from "react-icons/io5";
 import Maintasks from "./Maintasks";
 import axios from "axios";
-import PropTypes from "prop-types";
+import TaskifyCalendar from "./Calendar";
 
-const Maincontent = ({ mobileView }) => {
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+];
+
+const dayNames = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+];
+
+const Maincontent = () => {
   // state to handle the date
-  const [date, setDate] = useState("");
+  const [showDate, setShowDate] = useState("");
   const [day, setDay] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -18,51 +42,20 @@ const Maincontent = ({ mobileView }) => {
   // get all task state
   const [allTask, setAllTask] = useState([]);
 
-  const handleCalendarChange = (e) => {
-    setSelectedDate(e);
+  const handleCalendarChange = (date) => {
+    setSelectedDate(date?.toDate() || new Date());
   };
-
-  // get date function
 
   // should run when the component mounts and the date state changes
   useEffect(() => {
-    const getDate = () => {
-      const date = selectedDate;
-
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "august",
-        "september",
-        "october",
-        "november",
-        "december",
-      ];
-      const dayNames = [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-      ];
-      const dt = date.getDate();
-
-      setDay(dayNames[date.getDay()]);
-      setDate(
-        `${String(dt).padStart(2, "0")}, ${
-          monthNames[date.getMonth()]
-        } ${date.getFullYear()}`
-      );
-    };
-
-    getDate();
+    const date = selectedDate;
+    const dt = date.getDate();
+    setDay(dayNames[date.getDay()]);
+    setShowDate(
+      `${String(dt).padStart(2, "0")}, ${
+        monthNames[date.getMonth()]
+      } ${date.getFullYear()}`
+    );
   }, [selectedDate]);
 
   // function to handle the add task button
@@ -112,9 +105,6 @@ const Maincontent = ({ mobileView }) => {
 
   // useEffect to render all the tasks for the specific user
   useEffect(() => {
-    // setInterval(() => {
-    //   getAllTasks();
-    // }, 500);
     getAllTasks();
   }, [allTask]);
 
@@ -123,31 +113,17 @@ const Maincontent = ({ mobileView }) => {
       {/* for the top div */}
       <div className="w-full flex flex-col md:flex-row">
         {/* top-left div */}
-        <div className="w-[35%] py-[0.75rem] px-[1rem] flex flex-col">
+        <div className="md:w-[35%] w-full py-[0.75rem] px-[1rem] flex flex-col">
           <div className="w-full flex flex-col justify-start gap-[0.5rem]">
             <div className="text-3xl capitalize text-[#FF6666]">{day}</div>
             <div className="w-full  text-4xl capitalize font-semibold text-ellipsis">
-              {date}
+              {showDate}
             </div>
           </div>
           <div className="w-full pt-[1.5rem]">
-            {/* // todo : add calendar from the material UI */}
-            <Calendar
-              className="w-full text-center flex flex-col gap-[0.5rem] bg-white rounded-md text-lg"
-              value={selectedDate}
-              onChange={handleCalendarChange}
-              tileClassName={({ date, view }) => {
-                if (view === "month") {
-                  if (
-                    date.getDate() === selectedDate.getDate() &&
-                    date.getMonth() === selectedDate.getMonth() &&
-                    date.getFullYear() === selectedDate.getFullYear()
-                  ) {
-                    return "bg-[#FF6666] text-black rounded-md font-semibold text-xl";
-                  }
-                }
-                return "hover:bg-[#FAF7F2] cursor-pointer py-[1rem] rounded-md";
-              }}
+            <TaskifyCalendar
+              selectedDate={selectedDate}
+              handleDateChange={handleCalendarChange}
             />
           </div>
           <div className="w-full h-[5rem] mt-[1rem] flex flex-row justify-between">
@@ -230,10 +206,6 @@ const Maincontent = ({ mobileView }) => {
       </div>
     </div>
   );
-};
-
-Maincontent.propTypes = {
-  mobileView: PropTypes.bool,
 };
 
 export default Maincontent;

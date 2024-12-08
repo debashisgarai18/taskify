@@ -10,6 +10,7 @@ import Loader from "./Loader";
 import { LoadingContext } from "../../context";
 import { IoMdAdd } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
+import MobileView from "./MobileView";
 
 const Landing = () => {
   const [name, setName] = useState("");
@@ -19,6 +20,19 @@ const Landing = () => {
 
   const nav = useNavigate();
   const { isLoading, setLoading } = useContext(LoadingContext);
+
+  // to disable scrolling when mobile view is active
+  useEffect(() => {
+    if (addTaskMobile) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [addTaskMobile]);
 
   useEffect(() => {
     (async function getUserData() {
@@ -54,7 +68,7 @@ const Landing = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="w-full min-h-screen relative px-[1rem] md:px-0">
+      <div className="w-full min-h-screen relative">
         <LandingNavbar avatar={name[0]} updateActive={setisActive} />
         <div
           className={`py-[1rem] px-[1rem] w-[10rem] md:w-[15rem] bg-[#F2EAEA] shadow-2xl absolute right-0 md:right-[19%] top-[3.7rem] rounded-md flex flex-col gap-[0.5rem] items-center justify-center ${
@@ -82,24 +96,7 @@ const Landing = () => {
           , <span className="text-[#585858]">Start planning today</span>
         </div>
         <Maincontent mobileView={addTaskMobile} />
-        {addTaskMobile && (
-          <div className="fixed w-[70%] bg-green-300 px-[0.75rem] py-[0.5rem] right-[1rem] bottom-[9.75rem] flex flex-col gap-[1rem]">
-            <div className="text-xl font-medium">Add Task</div>
-            <input
-              type="text"
-              placeholder="Enter the task"
-              className=" w-full py-[0.5rem] px-[1rem] rounded-lg text-sm tracking-wide bg-[#e9f3f8] border-[2px] border-[#8ec6e9] focus:outline-none focus:border-cyan-500"
-            />
-            <input
-              type="text"
-              placeholder="Enter the description"
-              className=" w-full py-[0.5rem] px-[1rem] rounded-lg text-sm tracking-wide bg-[#e9f3f8] border-[2px] border-[#8ec6e9] focus:outline-none focus:border-cyan-500"
-            />
-            <button className=" cursor-pointer rounded-lg font-medium text-white text-xl py-[0.5rem] bg-[#5C9967] active:translate-y-[1px]">
-              Add
-            </button>
-          </div>
-        )}
+        {addTaskMobile && <MobileView />}
         <div
           className="w-[4rem] cursor-pointer rounded-2xl h-[4rem] fixed md:hidden bottom-20 font-medium flex items-center justify-center text-white text-[3rem] bg-[#5C9967] right-[1rem] active:translate-y-[1px]"
           onClick={() => setAddTaskMobile((prev) => !prev)}
