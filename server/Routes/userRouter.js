@@ -117,51 +117,36 @@ userRouter.get("/landing", userValdationMW, async (req, res) => {
 });
 
 // the endpoint to add the tasks
-userRouter.post("/addtasks", userValdationMW, async (req, res) => {
-  const { tname, desc } = req.body;
-
-  // push the data in the DB
-  const response = await tasks.create({
-    taskName: tname,
-    description: desc,
-  });
-  if (response) {
-    res.status(200).json({
-      task_id: response._id,
-    });
-  } else {
-    res.status(404).json({
-      message: "There is some issue in pushing the tasks in the DB",
-    });
-  }
-});
-
-// the endpoint to actually add the tasks to the sepcific userarray
-userRouter.post("/addtasks/:taskId", userValdationMW, async (req, res) => {
-  const taskId = req.params.taskId;
+userRouter.post("/addTasks", userValdationMW, async (req, res) => {
+  const { task, desc } = req.body;
   const userId = req.userId;
 
-  const update = await users.findOneAndUpdate(
-    {
-      _id: userId,
-    },
-    {
-      $push: {
-        assignedTasks: taskId,
-      },
-    }
-  );
-
-  if (update) {
-    res.status(200).json({
-      message: "The user is updated with the task!!",
+  try {
+    const addedTask = await tasks.create({
+      taskName: task,
+      description: desc,
     });
-  } else {
-    res.status(404).json({
-      message: "There is some issue in updating the tasks!",
+    if (addedTask) {
+      const updateUser = await users.findById({
+        _id: userId,
+      });
+      if (updateUser) {
+        updateUser.assignedTasks.push(addedTask._id);
+        updateUser.save();
+        return res.status(200).json({
+          user: updateUser,
+          task: addedTask,
+          message: "Task created",
+        });
+      }
+    }
+  } catch (err) {
+    return res.status(500).json({
+      message: `Some internal server error : ${err}`,
     });
   }
 });
+
 
 // get all the tasks for the specific user
 userRouter.get("/showtasks", userValdationMW, async (req, res) => {

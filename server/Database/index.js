@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { mongo_url } = require("../config");
+const { boolean } = require("zod");
 mongoose.connect(mongo_url);
 
 // defifing the taskSchema, which will accept the taskname and the description from the user
@@ -18,6 +19,11 @@ const taskSchema = new mongoose.Schema({
   },
   priority: {
     type: String,
+    default: "low priority",
+  },
+  completed: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -36,7 +42,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  assignedTasks: [taskSchema],
+  assignedTasks: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Tasks",
+    },
+  ],
 });
 
 const tasks = mongoose.model("Tasks", taskSchema);
