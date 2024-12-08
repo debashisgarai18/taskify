@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import Maintasks from "./Maintasks";
-import axios from "axios";
 import TaskifyCalendar from "./Calendar";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 const monthNames = [
   "January",
@@ -30,15 +29,11 @@ const dayNames = [
   "saturday",
 ];
 
-const Maincontent = ({ task, desc, add }) => {
+const Maincontent = ({ task, desc, add, userData }) => {
   // state to handle the date
   const [showDate, setShowDate] = useState("");
   const [day, setDay] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
-
-
-  // get all task state
-  const [allTask, setAllTask] = useState([]);
 
   const handleCalendarChange = (date) => {
     setSelectedDate(date?.toDate() || new Date());
@@ -56,64 +51,16 @@ const Maincontent = ({ task, desc, add }) => {
     );
   }, [selectedDate]);
 
-  // function to handle the add task button
-  // const handleAddTask = async () => {
-  //   const data = {
-  //     tname: taskName,
-  //     desc: taskDesc,
-  //   };
-
-  //   const addTask = await axios.post(
-  //     "http://localhost:3000/user/addtasks",
-  //     data,
-  //     {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: localStorage.getItem("token"),
-  //       },
-  //     }
-  //   );
-  //   const taskId = addTask.data.task_id;
-  //   const updateTask = await axios.post(
-  //     `http://localhost:3000/user/addtasks/${taskId}`,
-  //     {},
-  //     {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: localStorage.getItem("token"),
-  //       },
-  //     }
-  //   );
-  //   console.log(updateTask.data);
-  //   setTaskName("");
-  //   setTaskDesc("");
-  //   alert("task created successfully!!");
-  // };
-
-  const getAllTasks = async () => {
-    const res = await axios.get("http://localhost:3000/user/showtasks", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-    });
-
-    setAllTask(res.data);
-  };
-
-  // useEffect to render all the tasks for the specific user
-  useEffect(() => {
-    getAllTasks();
-  }, [allTask]);
-
   return (
-    <div className="w-full md:w-[60%] relative m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
+    <div className="w-full md:w-[60%] mb-[5rem] md:mb-0 relative m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
       {/* for the top div */}
       <div className="w-full flex flex-col md:flex-row">
         {/* top-left div */}
         <div className="md:w-[35%] w-full py-[0.75rem] px-[1rem] flex flex-col">
           <div className="w-full flex flex-col justify-start gap-[0.5rem]">
-            <div className="text-3xl capitalize text-[#FF6666]">{day}</div>
+            <div className="text-3xl capitalize font-medium text-[#FF6666]">
+              {day}
+            </div>
             <div className="w-full  text-4xl capitalize font-semibold text-ellipsis">
               {showDate}
             </div>
@@ -140,8 +87,8 @@ const Maincontent = ({ task, desc, add }) => {
           </div>
         </div>
         {/* top-right div */}
-        <div className="w-[65%] h-full px-[1rem] py-[0.75rem]">
-          <div className="w-full h-[3rem] flex flex-row justify-betwwen items-center gap-[15px]">
+        <div className="w-full md:w-[65%] h-full px-[1rem] py-[0.75rem]">
+          <div className="w-full h-[3rem] hidden md:flex flex-row justify-betwwen items-center gap-[15px]">
             <input
               type="text"
               placeholder="Title of the task"
@@ -175,29 +122,36 @@ const Maincontent = ({ task, desc, add }) => {
                 </option>
               </select>
             </div>
-            <div className="h-full w-[40%] flex justify-center items-center relative ">
+            <div className="h-full w-[50%] md:w-[40%] flex justify-center items-center rounded-md relative border-2 border-[#F2B258]">
               <input
                 type="text"
                 placeholder="Search by name"
-                className="bg-white h-full px-[0.5rem] text-xs rounded-tl-md rounded-bl-md focus:outline-none border-2 border-l-[#F2B258] border-t-[#F2B258] border-b-[#F2B258] outline-none"
+                className="bg-white w-full h-full rounded-md px-[0.5rem] text-xs outline-none"
               />
-              <button className="h-full bg-white border-2 rounded-tr-md rounded-br-md border-r-[#F2B258] px-[0.5rem] border-t-[#F2B258] border-b-[#F2B258] absolute right-5">
+              <button className="h-full bg-white rounded-md   px-[0.5rem]  absolute right-0">
                 <IoSearchSharp />
               </button>
             </div>
           </div>
           {/* div for the main Tasks */}
-          <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
-            {allTask &&
-              allTask.all_tasks?.map((e, idx) => (
+          {userData.assignedTasks?.length === 0 ? (
+            <div className="text-center font-medium pt-[1rem] text-2xl">
+              No tasks Present
+            </div>
+          ) : (
+            <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
+              {userData.assignedTasks?.map((e, idx) => (
                 <Maintasks key={idx} taskName={e.task} desc={e.desc} />
               ))}
-          </div>
-          <div className="w-full mt-[1rem] flex items-center justify-center">
-            <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
-              Load More
-            </button>
-          </div>
+            </div>
+          )}
+          {userData.assignedTasks?.length > 0 && (
+            <div className="w-full mt-[1rem] flex items-center justify-center">
+              <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
+                Load More
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -208,7 +162,7 @@ Maincontent.propTypes = {
   add: PropTypes.func,
   desc: PropTypes.func,
   task: PropTypes.func,
+  userData: PropTypes.object,
 };
-
 
 export default Maincontent;

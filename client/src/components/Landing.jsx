@@ -75,8 +75,8 @@ const Landing = () => {
   }
 
   return (
-    <div className="w-full min-h-screen">
-      <div className="w-full min-h-screen relative">
+    <div className="w-full h-fit md:min-h-screen">
+      <div className="w-full h-full relative">
         <LandingNavbar avatar={name[0]} updateActive={setisActive} />
         <div
           className={`py-[1rem] px-[1rem] w-[10rem] md:w-[15rem] bg-[#F2EAEA] shadow-2xl absolute right-0 md:right-[19%] top-[3.7rem] rounded-md flex flex-col gap-[0.5rem] items-center justify-center ${
@@ -100,13 +100,16 @@ const Landing = () => {
         </div>
         <div className="w-full md:px-0 px-[1rem] md:w-[50%] leading-[2.5rem] pt-[1rem] m-auto text-center text-[2.5rem] md:text-5xl tracking-wide font-semibold">
           Hello,{" "}
-          <span className="uppercase text-[#f37e6c]">{name.split(" ")[0]}</span>
+          <span className="uppercase font-bold text-[#f37e6c]">
+            {name.split(" ")[0]}
+          </span>
           , <span className="text-[#585858]">Start planning today</span>
         </div>
         <Maincontent
           task={(e) => setTask(e)}
           desc={(e) => setDesc(e)}
           add={handleAddTask}
+          userData={user}
         />
         <LandingFooter />
       </div>
