@@ -1,4 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Birthstone&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .header-text {
+    font-family: "Birthstone", cursive;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+  }
+}

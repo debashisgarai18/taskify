@@ -100,7 +100,7 @@ const Landing = () => {
         </div>
         <div className="w-full md:px-0 px-[1rem] md:w-[50%] leading-[2.5rem] pt-[1rem] m-auto text-center text-[2.5rem] md:text-5xl tracking-wide font-semibold">
           Hello,{" "}
-          <span className="uppercase font-bold text-[#f37e6c]">
+          <span className="uppercase font-bold text-[4rem] text-[#f37e6c] header-text italic">
             {name.split(" ")[0]}
           </span>
           , <span className="text-[#585858]">Start planning today</span>

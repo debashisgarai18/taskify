@@ -58,7 +58,7 @@ const Maincontent = ({ task, desc, add, userData }) => {
         {/* top-left div */}
         <div className="md:w-[35%] w-full py-[0.75rem] px-[1rem] flex flex-col">
           <div className="w-full flex flex-col justify-start gap-[0.5rem]">
-            <div className="text-3xl capitalize font-medium text-[#FF6666]">
+            <div className="text-[3rem] capitalize font-medium italic text-[#FF6666] header-text">
               {day}
             </div>
             <div className="w-full  text-4xl capitalize font-semibold text-ellipsis">
