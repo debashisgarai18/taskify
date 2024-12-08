@@ -17,6 +17,8 @@ const Landing = () => {
   const [user, setUser] = useState({});
   const [isActive, setisActive] = useState(false);
   const [addTaskMobile, setAddTaskMobile] = useState(false);
+  const [task, setTask] = useState("");
+  const [desc, setDesc] = useState("");
 
   const nav = useNavigate();
   const { isLoading, setLoading } = useContext(LoadingContext);
@@ -28,7 +30,6 @@ const Landing = () => {
     } else {
       document.body.style.overflow = "auto";
     }
-
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -61,6 +62,13 @@ const Landing = () => {
       }
     })();
   }, [nav, setLoading]);
+
+  // functions
+
+  // function to add Tasks to the DB
+  const handleAddTask = () => {
+    console.log(task, desc);
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -95,15 +103,25 @@ const Landing = () => {
           <span className="uppercase text-[#f37e6c]">{name.split(" ")[0]}</span>
           , <span className="text-[#585858]">Start planning today</span>
         </div>
-        <Maincontent mobileView={addTaskMobile} />
-        {addTaskMobile && <MobileView />}
-        <div
-          className="w-[4rem] cursor-pointer rounded-2xl h-[4rem] fixed md:hidden bottom-20 font-medium flex items-center justify-center text-white text-[3rem] bg-[#5C9967] right-[1rem] active:translate-y-[1px]"
-          onClick={() => setAddTaskMobile((prev) => !prev)}
-        >
-          {addTaskMobile ? <RxCross2 /> : <IoMdAdd />}
-        </div>
+        <Maincontent
+          task={(e) => setTask(e)}
+          desc={(e) => setDesc(e)}
+          add={handleAddTask}
+        />
         <LandingFooter />
+      </div>
+      {addTaskMobile && (
+        <MobileView
+          task={(e) => setTask(e)}
+          desc={(e) => setDesc(e)}
+          add={handleAddTask}
+        />
+      )}
+      <div
+        className="w-[4rem] cursor-pointer rounded-2xl h-[4rem] fixed md:hidden bottom-20 font-medium flex items-center justify-center text-white text-[3rem] bg-[#5C9967] right-[1rem] active:translate-y-[1px]"
+        onClick={() => setAddTaskMobile((prev) => !prev)}
+      >
+        {addTaskMobile ? <RxCross2 /> : <IoMdAdd />}
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import Maintasks from "./Maintasks";
 import axios from "axios";
 import TaskifyCalendar from "./Calendar";
+import PropTypes from 'prop-types'
 
 const monthNames = [
   "January",
@@ -29,15 +30,12 @@ const dayNames = [
   "saturday",
 ];
 
-const Maincontent = () => {
+const Maincontent = ({ task, desc, add }) => {
   // state to handle the date
   const [showDate, setShowDate] = useState("");
   const [day, setDay] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // task's states
-  const [taskName, setTaskName] = useState("");
-  const [taskDesc, setTaskDesc] = useState("");
 
   // get all task state
   const [allTask, setAllTask] = useState([]);
@@ -59,38 +57,38 @@ const Maincontent = () => {
   }, [selectedDate]);
 
   // function to handle the add task button
-  const handleAddTask = async () => {
-    const data = {
-      tname: taskName,
-      desc: taskDesc,
-    };
+  // const handleAddTask = async () => {
+  //   const data = {
+  //     tname: taskName,
+  //     desc: taskDesc,
+  //   };
 
-    const addTask = await axios.post(
-      "http://localhost:3000/user/addtasks",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      }
-    );
-    const taskId = addTask.data.task_id;
-    const updateTask = await axios.post(
-      `http://localhost:3000/user/addtasks/${taskId}`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      }
-    );
-    console.log(updateTask.data);
-    setTaskName("");
-    setTaskDesc("");
-    alert("task created successfully!!");
-  };
+  //   const addTask = await axios.post(
+  //     "http://localhost:3000/user/addtasks",
+  //     data,
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: localStorage.getItem("token"),
+  //       },
+  //     }
+  //   );
+  //   const taskId = addTask.data.task_id;
+  //   const updateTask = await axios.post(
+  //     `http://localhost:3000/user/addtasks/${taskId}`,
+  //     {},
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: localStorage.getItem("token"),
+  //       },
+  //     }
+  //   );
+  //   console.log(updateTask.data);
+  //   setTaskName("");
+  //   setTaskDesc("");
+  //   alert("task created successfully!!");
+  // };
 
   const getAllTasks = async () => {
     const res = await axios.get("http://localhost:3000/user/showtasks", {
@@ -148,19 +146,17 @@ const Maincontent = () => {
               type="text"
               placeholder="Title of the task"
               className="w-[30%] h-full px-[1rem] rounded-md text-sm tracking-wide bg-[#e9f3f8] border-[2px] border-[#8ec6e9] focus:outline-none focus:border-cyan-500"
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
+              onChange={(e) => task(e.target.value)}
             />
             <input
               type="text"
               placeholder="Description of the task"
               className="w-[60%] h-full px-[1rem] rounded-md text-sm tracking-wide bg-[#e9f3f8] border-[2px] border-[#8ec6e9] focus:outline-none focus:border-cyan-500"
-              value={taskDesc}
-              onChange={(e) => setTaskDesc(e.target.value)}
+              onChange={(e) => desc(e.target.value)}
             />
             <button
               className="w-[15%] h-full text-white text-4xl bg-[#5C9967] flex items-center justify-center rounded-tr-md rounded-br-md active:translate-y-[1px]"
-              onClick={handleAddTask}
+              onClick={add}
             >
               <div className="h-full w-full">+</div>
             </button>
@@ -207,5 +203,12 @@ const Maincontent = () => {
     </div>
   );
 };
+
+Maincontent.propTypes = {
+  add: PropTypes.func,
+  desc: PropTypes.func,
+  task: PropTypes.func,
+};
+
 
 export default Maincontent;
