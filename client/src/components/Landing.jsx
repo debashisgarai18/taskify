@@ -18,6 +18,7 @@ const Landing = () => {
   const [isActive, setisActive] = useState(false);
   const [addTaskMobile, setAddTaskMobile] = useState(false);
   const [task, setTask] = useState("");
+  const [setTaskAdded] = useState(false);
   const [desc, setDesc] = useState("");
 
   const nav = useNavigate();
@@ -61,13 +62,39 @@ const Landing = () => {
         }
       }
     })();
-  }, [nav, setLoading]);
+  }, [nav, setLoading, setTaskAdded]);
 
   // functions
 
   // function to add Tasks to the DB
-  const handleAddTask = () => {
-    console.log(task, desc);
+  const handleAddTask = async () => {
+    if (!task || !desc) {
+      toast.error("Tasks inputs cannot be empty");
+      return;
+    }
+    try {
+      setLoading((prev) => !prev);
+      const resp = await axios.post(
+        `${BACKEND_URL}user/addTasks`,
+        {
+          task,
+          desc,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      if (resp) {
+        setLoading((prev) => !prev);
+        toast.success("The task is added successfully");
+      }
+    } catch (err) {
+      setLoading((prev) => !prev);
+      toast.error("Cannot create tasks");
+      console.log(`Error : ${err.response.data.message}`);
+    }
   };
 
   if (isLoading) {
