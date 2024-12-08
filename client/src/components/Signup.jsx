@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
@@ -7,6 +7,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { BACKEND_URL } from "../../config";
 import { useEffect } from "react";
+import { LoadingContext } from "../../context";
+import Loader from "./Loader";
 
 const Signup = () => {
   // states
@@ -15,6 +17,8 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
+
+  const { isLoading, setLoading } = useContext(LoadingContext);
 
   // function to handle the visible of the password
   const handlePwdVisiblity = () => {
@@ -26,21 +30,24 @@ const Signup = () => {
     (async function check() {
       if (localStorage.getItem("token")) {
         try {
+          setLoading((prev) => !prev);
           const resp = await axios.get(`${BACKEND_URL}user/me`, {
             headers: {
               Authorization: localStorage.getItem("token"),
             },
           });
           if (resp) {
+            setLoading((prev) => !prev);
             toast.success("User is already signed in");
             nav(`/landing?user=${resp.data.user}`);
           }
         } catch (err) {
+          setLoading((prev) => !prev);
           console.log(`Some error : ${err.response.data.message}`);
         }
       }
     })();
-  }, [nav]);
+  }, [nav, setLoading]);
 
   // function for the onsubmit of the form
   const handleSubmit = async (e) => {
@@ -72,16 +79,23 @@ const Signup = () => {
     };
 
     try {
+      setLoading((prev) => !prev);
       const resp = await axios.post(`${BACKEND_URL}user/signup`, userData);
       if (resp) {
+        setLoading((prev) => !prev);
         localStorage.setItem("token", `Bearer ${resp.data.token}`);
         toast.success("User Signed Up");
         nav(`/landing?user=${resp.data.user}`);
       }
     } catch (err) {
+      setLoading((prev) => !prev);
       toast(`Error : ${err}`);
     }
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="h-screen w-full bg-white">

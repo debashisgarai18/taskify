@@ -3,8 +3,9 @@ import Calendar from "react-calendar";
 import { IoSearchSharp } from "react-icons/io5";
 import Maintasks from "./Maintasks";
 import axios from "axios";
+import PropTypes from "prop-types";
 
-const Maincontent = () => {
+const Maincontent = ({ mobileView }) => {
   // state to handle the date
   const [date, setDate] = useState("");
   const [day, setDay] = useState("");
@@ -118,9 +119,9 @@ const Maincontent = () => {
   }, [allTask]);
 
   return (
-    <div className="w-[60%] h-[660px] m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
+    <div className="w-full md:w-[60%] relative m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
       {/* for the top div */}
-      <div className="h-[100%] w-full flex flex-row">
+      <div className="w-full flex flex-col md:flex-row">
         {/* top-left div */}
         <div className="w-[35%] py-[0.75rem] px-[1rem] flex flex-col">
           <div className="w-full flex flex-col justify-start gap-[0.5rem]">
@@ -229,6 +230,10 @@ const Maincontent = () => {
       </div>
     </div>
   );
+};
+
+Maincontent.propTypes = {
+  mobileView: PropTypes.bool,
 };
 
 export default Maincontent;

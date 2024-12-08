@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 import { BACKEND_URL } from "../../config";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { LoadingContext } from "../../context";
+import Loader from "./Loader";
 
 const Signin = () => {
   // states
@@ -14,31 +16,36 @@ const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { isLoading, setLoading } = useContext(LoadingContext);
+  const nav = useNavigate();
+
   const handlePwdVisiblity = () => {
     setisVisible(!isVisible);
   };
-  const nav = useNavigate();
 
   // check for the me endpoint
   useEffect(() => {
     (async function check() {
       if (localStorage.getItem("token")) {
         try {
+          setLoading((prev) => !prev);
           const resp = await axios.get(`${BACKEND_URL}user/me`, {
             headers: {
               Authorization: localStorage.getItem("token"),
             },
           });
           if (resp) {
-            toast.success("User is already signed in")
+            setLoading((prev) => !prev);
+            toast.success("User is already signed in");
             nav(`/landing?user=${resp.data.user}`);
           }
         } catch (err) {
+          setLoading((prev) => !prev);
           console.log(`Some error : ${err.response.data.message}`);
         }
       }
     })();
-  }, [nav]);
+  }, [nav, setLoading]);
 
   // function to handle thte submit feature
   const handleSubmit = async (e) => {
@@ -46,9 +53,16 @@ const Signin = () => {
 
     // check whether the fields are empty or not
     if (!email || !password) {
-      alert(
-        "The signin input fields cannot be empty | Kindly fill to proceed !!"
-      );
+      toast.error("The input fields cannot be empty  ", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
 
@@ -59,16 +73,24 @@ const Signin = () => {
     };
 
     try {
+      setLoading((prev) => !prev);
       const resp = await axios.post(`${BACKEND_URL}user/signin`, signinData);
       if (resp) {
         localStorage.setItem("token", `Bearer ${resp.data.token}`);
         toast.success("User Signed In");
+        setLoading((prev) => !prev);
         nav(`/landing?user=${resp.data.user}`);
       }
     } catch (err) {
+      setLoading((prev) => !prev);
       toast.error(`Error : ${err.response.data.message}`);
     }
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className="h-screen w-full bg-white">
       <div className="w-full md:w-[50%] h-full m-auto md:px-0 px-[1rem]">
