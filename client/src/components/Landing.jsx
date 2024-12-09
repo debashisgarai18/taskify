@@ -35,6 +35,7 @@ const Landing = () => {
     };
   }, [addTaskMobile]);
 
+  // to render the user details
   useEffect(() => {
     (async function getUserData() {
       if (!localStorage.getItem("token")) {
@@ -43,15 +44,15 @@ const Landing = () => {
       } else {
         try {
           setLoading((prev) => !prev);
-          const resp = await axios.get(`${BACKEND_URL}user/landing`, {
+          const respUser = await axios.get(`${BACKEND_URL}user/landing`, {
             headers: {
               Authorization: localStorage.getItem("token"),
             },
           });
-          if (resp) {
+          if (respUser) {
             setLoading((prev) => !prev);
-            setUser(resp.data.user);
-            setName(resp.data.user.name);
+            setUser(respUser.data.user);
+            setName(respUser.data.user.name);
           }
         } catch (err) {
           setLoading((prev) => !prev);

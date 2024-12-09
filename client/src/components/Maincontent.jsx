@@ -3,6 +3,8 @@ import { IoSearchSharp } from "react-icons/io5";
 import Maintasks from "./Maintasks";
 import TaskifyCalendar from "./Calendar";
 import PropTypes from "prop-types";
+import axios from "axios";
+import { BACKEND_URL } from "../../config";
 
 const monthNames = [
   "January",
@@ -34,6 +36,8 @@ const Maincontent = ({ task, desc, add, userData }) => {
   const [showDate, setShowDate] = useState("");
   const [day, setDay] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [pendingTasks, setPendingTasks] = useState(null);
+  const [completedTasks, setCompletedTasks] = useState(null);
 
   const handleCalendarChange = (date) => {
     setSelectedDate(date?.toDate() || new Date());
@@ -49,6 +53,31 @@ const Maincontent = ({ task, desc, add, userData }) => {
         monthNames[date.getMonth()]
       } ${date.getFullYear()}`
     );
+  }, [selectedDate]);
+
+  useEffect(() => {
+    (async function getTasks() {
+      if (localStorage.getItem("token")) {
+        try {
+          const resp = await axios.get(
+            `${BACKEND_URL}user/showTasks?date=${
+              selectedDate.toISOString().split("T")[0]
+            }`,
+            {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            }
+          );
+          if (resp) {
+            setCompletedTasks(resp.data.completedCount);
+            setPendingTasks(resp.data.pendingCount);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    })();
   }, [selectedDate]);
 
   return (
@@ -76,13 +105,17 @@ const Maincontent = ({ task, desc, add, userData }) => {
               <div className="font-semibold uppercase text-sm text-center">
                 Completed Tasks
               </div>
-              <div className="font-extrabold text-3xl">04</div>
+              <div className="font-extrabold text-3xl">
+                {pendingTasks < 10 ? `0${pendingTasks}` : pendingTasks}
+              </div>
             </div>
             <div className="w-[48%] h-full bg-[#C4A49F] rounded-md flex flex-col items-center justify-center px-[1rem] py-[0.5rem]">
               <div className="font-semibold uppercase text-sm text-center">
                 Pending Tasks
               </div>
-              <div className="font-extrabold text-3xl">15</div>
+              <div className="font-extrabold text-3xl">
+                {completedTasks < 10 ? `0${completedTasks}` : completedTasks}
+              </div>
             </div>
           </div>
         </div>
