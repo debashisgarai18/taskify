@@ -139,6 +139,7 @@ const Maincontent = ({ task, desc, add, userData }) => {
               No tasks Present
             </div>
           ) : (
+            // todo : make it responsive
             <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
               {userData.assignedTasks?.map((e, idx) => (
                 <Maintasks key={idx} taskName={e.task} desc={e.desc} />

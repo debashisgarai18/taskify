@@ -18,7 +18,6 @@ const Landing = () => {
   const [isActive, setisActive] = useState(false);
   const [addTaskMobile, setAddTaskMobile] = useState(false);
   const [task, setTask] = useState("");
-  const [setTaskAdded] = useState(false);
   const [desc, setDesc] = useState("");
 
   const nav = useNavigate();
@@ -62,7 +61,7 @@ const Landing = () => {
         }
       }
     })();
-  }, [nav, setLoading, setTaskAdded]);
+  }, [nav, setLoading]);
 
   // functions
 
@@ -88,6 +87,7 @@ const Landing = () => {
       );
       if (resp) {
         setLoading((prev) => !prev);
+        setUser(resp.data.user);
         toast.success("The task is added successfully");
       }
     } catch (err) {
@@ -132,6 +132,7 @@ const Landing = () => {
           </span>
           , <span className="text-[#585858]">Start planning today</span>
         </div>
+        {/* //todo : instead of ending the whole user object send the tasks ids only */}
         <Maincontent
           task={(e) => setTask(e)}
           desc={(e) => setDesc(e)}
