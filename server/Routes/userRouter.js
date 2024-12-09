@@ -172,8 +172,8 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
     });
 
     // count of the completed and pending tasks in  the array
-    const pendingTaskCount = allTasks.filter((e) => !e.completed).length;
-    const completedTaskCount = allTasks.filter((e) => e.completed).length;
+    const pendingTaskCount = filteredTasks.filter((e) => !e.completed).length;
+    const completedTaskCount = filteredTasks.filter((e) => e.completed).length;
 
     return res.status(200).json({
       filter: filteredTasks,
