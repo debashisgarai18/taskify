@@ -147,33 +147,42 @@ userRouter.post("/addTasks", userValdationMW, async (req, res) => {
   }
 });
 
-
-// get all the tasks for the specific user
+// get all the tasks for the specific user + the count of the pending and the completed Tasks
 userRouter.get("/showtasks", userValdationMW, async (req, res) => {
-  const uId = req.userId;
+  const userId = req.userId;
+  const date = req.query.date;
 
-  const response = await users.findOne({
-    _id: uId,
-  });
-
-  if (response) {
-    const data = await tasks.find({
-      _id: {
-        $in: response.assignedTasks,
-      },
+  try {
+    const userDetails = await users.findById({
+      _id: userId,
     });
 
-    res.status(200).json({
-      all_tasks: data.map((e) => {
-        return {
-          task: e.taskName,
-          desc: e.description,
-        };
-      }),
+    const allTasks = await Promise.all(
+      // map cannot handle async operations so we have to wrap in a Promise.all
+      userDetails.assignedTasks.map(async (e) => {
+        return await tasks.findById({
+          _id: e,
+        });
+      })
+    );
+
+    const filteredTasks = allTasks.filter((e) => {
+      const extractedDate = e.createdAt.toISOString().split("T")[0];
+      if (extractedDate === date) return e;
     });
-  } else {
-    res.status(400).json({
-      message: "There is some issue in generating the data",
+
+    // count of the completed and pending tasks in  the array
+    const pendingTaskCount = allTasks.filter((e) => !e.completed).length;
+    const completedTaskCount = allTasks.filter((e) => e.completed).length;
+
+    return res.status(200).json({
+      filter: filteredTasks,
+      pendingCount: pendingTaskCount,
+      completedCount: completedTaskCount,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Some Internal Server Error : ${err}`,
     });
   }
 });
