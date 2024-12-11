@@ -181,19 +181,19 @@ const Maincontent = ({ task, desc, add }) => {
             </div>
           ) : (
             // todo : make it responsive
-            <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
+            <div className="w-full max-h-[400px] grid grid-cols-1 md:grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-scroll">
               {filteredTasksByDate.map((e, idx) => (
-                <Maintasks key={idx} taskName={e.task} desc={e.desc} />
+                <Maintasks key={idx} taskDetails={e} />
               ))}
             </div>
           )}
-          {filteredTasksByDate.length > 0 && (
+          {/* {filteredTasksByDate.length > 0 && (
             <div className="w-full mt-[1rem] flex items-center justify-center">
               <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
                 Load More
               </button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
