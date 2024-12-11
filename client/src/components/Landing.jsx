@@ -14,7 +14,6 @@ import MobileView from "./MobileView";
 
 const Landing = () => {
   const [name, setName] = useState("");
-  const [user, setUser] = useState({});
   const [isActive, setisActive] = useState(false);
   const [addTaskMobile, setAddTaskMobile] = useState(false);
   const [task, setTask] = useState("");
@@ -51,7 +50,6 @@ const Landing = () => {
           });
           if (respUser) {
             setLoading((prev) => !prev);
-            setUser(respUser.data.user);
             setName(respUser.data.user.name);
           }
         } catch (err) {
@@ -88,7 +86,6 @@ const Landing = () => {
       );
       if (resp) {
         setLoading((prev) => !prev);
-        setUser(resp.data.user);
         toast.success("The task is added successfully");
       }
     } catch (err) {
@@ -138,7 +135,6 @@ const Landing = () => {
           task={(e) => setTask(e)}
           desc={(e) => setDesc(e)}
           add={handleAddTask}
-          userData={user}
         />
         <LandingFooter />
       </div>

@@ -5,6 +5,7 @@ import TaskifyCalendar from "./Calendar";
 import PropTypes from "prop-types";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
+import TaskLoading from "./TaskLoading";
 
 const monthNames = [
   "January",
@@ -31,13 +32,15 @@ const dayNames = [
   "saturday",
 ];
 
-const Maincontent = ({ task, desc, add, userData }) => {
+const Maincontent = ({ task, desc, add }) => {
   // state to handle the date
   const [showDate, setShowDate] = useState("");
   const [day, setDay] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [pendingTasks, setPendingTasks] = useState(null);
   const [completedTasks, setCompletedTasks] = useState(null);
+  const [filteredTasksByDate, setFilteredTasksByDate] = useState([]);
+  const [taskLoading, setTaskLoading] = useState(false);
 
   const handleCalendarChange = (date) => {
     setSelectedDate(date?.toDate() || new Date());
@@ -59,6 +62,7 @@ const Maincontent = ({ task, desc, add, userData }) => {
     (async function getTasks() {
       if (localStorage.getItem("token")) {
         try {
+          setTaskLoading((prev) => !prev);
           const resp = await axios.get(
             `${BACKEND_URL}user/showTasks?date=${
               selectedDate.toISOString().split("T")[0]
@@ -70,8 +74,10 @@ const Maincontent = ({ task, desc, add, userData }) => {
             }
           );
           if (resp) {
+            setTaskLoading((prev) => !prev);
             setCompletedTasks(resp.data.completedCount);
             setPendingTasks(resp.data.pendingCount);
+            setFilteredTasksByDate(resp.data.filter);
           }
         } catch (err) {
           console.log(err);
@@ -167,19 +173,21 @@ const Maincontent = ({ task, desc, add, userData }) => {
             </div>
           </div>
           {/* div for the main Tasks */}
-          {userData.assignedTasks?.length === 0 ? (
+          {taskLoading ? (
+            <TaskLoading />
+          ) : filteredTasksByDate.length === 0 ? (
             <div className="text-center font-medium pt-[1rem] text-2xl">
               No tasks Present
             </div>
           ) : (
             // todo : make it responsive
             <div className="w-full h-[400px] grid grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-hidden">
-              {userData.assignedTasks?.map((e, idx) => (
+              {filteredTasksByDate.map((e, idx) => (
                 <Maintasks key={idx} taskName={e.task} desc={e.desc} />
               ))}
             </div>
           )}
-          {userData.assignedTasks?.length > 0 && (
+          {filteredTasksByDate.length > 0 && (
             <div className="w-full mt-[1rem] flex items-center justify-center">
               <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
                 Load More
