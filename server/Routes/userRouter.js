@@ -165,7 +165,7 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
         });
       })
     );
-
+    
     const filteredTasks = allTasks.filter((e) => {
       const extractedDate = e.createdAt.toISOString().split("T")[0];
       if (extractedDate === date) return e;
@@ -183,6 +183,48 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       message: `Some Internal Server Error : ${err}`,
+    });
+  }
+});
+
+// endpoint to mark the task as conpleted
+userRouter.put("/updateTaskStatus", userValdationMW, async (req, res) => {
+  const taskId = req.query.taskId;
+
+  try {
+    const getTask = await tasks.findById({
+      _id: taskId,
+    });
+    getTask.completed = !getTask.completed;
+    getTask.save();
+    return res.status(200).json({
+      message: "The task status is updated successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Some internal server error : ${err}`,
+    });
+  }
+});
+
+// endpoint top delete the task from the DB
+userRouter.delete("/deleteTask", userValdationMW, async (req, res) => {
+  const taskId = req.query.taskId;
+  const userId = req.userId
+  try {
+    await tasks.deleteOne({
+      _id: taskId,
+    });
+    const findUser = await users.findById({
+      _id : userId
+    })
+    findUser.assignedTasks.map((e) => console.log(e))
+    return res.status(200).json({
+      message: "The Task is deleted successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Some internal server Error : ${err}`,
     });
   }
 });

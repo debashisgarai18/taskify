@@ -7,33 +7,8 @@ import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import TaskLoading from "./TaskLoading";
 
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "august",
-  "september",
-  "october",
-  "november",
-  "december",
-];
-
-const dayNames = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-];
-
 const Maincontent = ({ task, desc, add }) => {
-  // state to handle the date
+  // states
   const [showDate, setShowDate] = useState("");
   const [day, setDay] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -45,13 +20,37 @@ const Maincontent = ({ task, desc, add }) => {
     useState(false);
 
   const handleCalendarChange = (date) => {
-    setSelectedDate(date?.toDate() || new Date());
+    setSelectedDate(date ? date?.toDate() : new Date());
   };
 
-  // should run when the component mounts and the date state changes
   useEffect(() => {
     const date = selectedDate;
     const dt = date.getDate();
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "august",
+      "september",
+      "october",
+      "november",
+      "december",
+    ];
+
+    const dayNames = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ];
+
     setDay(dayNames[date.getDay()]);
     setShowDate(
       `${String(dt).padStart(2, "0")}, ${
@@ -66,9 +65,12 @@ const Maincontent = ({ task, desc, add }) => {
         try {
           setTaskLoading((prev) => !prev);
           const resp = await axios.get(
-            `${BACKEND_URL}user/showTasks?date=${
-              selectedDate.toISOString().split("T")[0]
-            }`,
+            `${BACKEND_URL}user/showTasks?date=${selectedDate
+              .toLocaleString("en-GB")
+              .split(",")[0]
+              .split("/")
+              .reverse()
+              .join("-")}`,
             {
               headers: {
                 Authorization: localStorage.getItem("token"),
