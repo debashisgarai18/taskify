@@ -8,10 +8,14 @@ const Maintasks = ({ taskDetails }) => {
     <div className="w-full h-[7rem] bg-[#F2B258] rounded-md pl-[1rem] pr-[0.5rem] py-[0.5rem] flex">
       <div className="w-[70%] h-full">
         <div className="w-full h-[80%] flex flex-col gap-[0.33rem]">
-          <div className="font-semibold text-lg tracking-wider">
+          <div className="font-semibold w-full text-lg tracking-wider">
             {taskDetails.taskName}
           </div>
-          <div className="text-sm leading-none">{taskDetails.description}</div>
+          <div className={`text-sm w-full leading-none`}>
+            {taskDetails.description.length > 10
+              ? `${taskDetails.description.slice(0, 10)}...`
+              : taskDetails.description}
+          </div>
         </div>
         <div className="w-full h-[20%] text-sm font-bold tracking-wider">
           <div>

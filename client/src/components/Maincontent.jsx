@@ -41,6 +41,8 @@ const Maincontent = ({ task, desc, add }) => {
   const [completedTasks, setCompletedTasks] = useState(null);
   const [filteredTasksByDate, setFilteredTasksByDate] = useState([]);
   const [taskLoading, setTaskLoading] = useState(false);
+  const [forceRerenderOnFetchData, setForceRerenderOnFetchData] =
+    useState(false);
 
   const handleCalendarChange = (date) => {
     setSelectedDate(date?.toDate() || new Date());
@@ -84,7 +86,7 @@ const Maincontent = ({ task, desc, add }) => {
         }
       }
     })();
-  }, [selectedDate]);
+  }, [selectedDate, forceRerenderOnFetchData]);
 
   return (
     <div className="w-full md:w-[60%] mb-[5rem] md:mb-0 relative m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
@@ -112,7 +114,7 @@ const Maincontent = ({ task, desc, add }) => {
                 Completed Tasks
               </div>
               <div className="font-extrabold text-3xl">
-                {pendingTasks < 10 ? `0${pendingTasks}` : pendingTasks}
+                {completedTasks < 10 ? `0${completedTasks}` : completedTasks}
               </div>
             </div>
             <div className="w-[48%] h-full bg-[#C4A49F] rounded-md flex flex-col items-center justify-center px-[1rem] py-[0.5rem]">
@@ -120,7 +122,7 @@ const Maincontent = ({ task, desc, add }) => {
                 Pending Tasks
               </div>
               <div className="font-extrabold text-3xl">
-                {completedTasks < 10 ? `0${completedTasks}` : completedTasks}
+                {pendingTasks < 10 ? `0${pendingTasks}` : pendingTasks}
               </div>
             </div>
           </div>
@@ -181,9 +183,13 @@ const Maincontent = ({ task, desc, add }) => {
             </div>
           ) : (
             // todo : make it responsive
-            <div className="w-full max-h-[400px] grid grid-cols-1 md:grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-scroll">
+            <div className="w-full max-h-[400px] grid grid-cols-1 md:grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-auto">
               {filteredTasksByDate.map((e, idx) => (
-                <Maintasks key={idx} taskDetails={e} />
+                <Maintasks
+                  key={idx}
+                  taskDetails={e}
+                  reRender={() => setForceRerenderOnFetchData((prev) => !prev)}
+                />
               ))}
             </div>
           )}

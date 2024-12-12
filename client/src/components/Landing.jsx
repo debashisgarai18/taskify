@@ -130,7 +130,6 @@ const Landing = () => {
           </span>
           , <span className="text-[#585858]">Start planning today</span>
         </div>
-        {/* //todo : instead of ending the whole user object send the tasks ids only */}
         <Maincontent
           task={(e) => setTask(e)}
           desc={(e) => setDesc(e)}
