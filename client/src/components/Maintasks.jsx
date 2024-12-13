@@ -13,8 +13,8 @@ const Maintasks = ({ taskDetails, reRender }) => {
   // states
   const [stroked, setStroked] = useState(taskDetails.completed);
   const [editEnabled, setEditEnabled] = useState(false);
-  const [newTask, setNewTask] = useState("");
-  const [newDesc, setNewDesc] = useState("");
+  const [newTask, setNewTask] = useState(taskDetails.taskName);
+  const [newDesc, setNewDesc] = useState(taskDetails.description);
 
   // functions
   const handleChecked = async () => {
@@ -124,7 +124,7 @@ const Maintasks = ({ taskDetails, reRender }) => {
                   <input
                     type="text"
                     className="w-full font-bold bg-transparent outline-none"
-                    defaultValue={taskDetails.taskName}
+                    value={newTask}
                     onChange={(e) => setNewTask(e.target.value)}
                   />
                 </div>
@@ -145,7 +145,7 @@ const Maintasks = ({ taskDetails, reRender }) => {
                 <input
                   type="text"
                   className="w-full bg-transparent outline-none"
-                  defaultValue={taskDetails.description}
+                  value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
                 />
               </div>

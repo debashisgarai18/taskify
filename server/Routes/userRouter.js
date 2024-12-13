@@ -266,7 +266,6 @@ userRouter.put("/chagePriority", userValdationMW, async (req, res) => {
 userRouter.put("/updateTaskDetails", userValdationMW, async (req, res) => {
   const taskId = req.query.taskId;
   const { task, desc } = req.body;
-  // todo : handle the cases when the task and the desc are null values
   try {
     const updatedTask = await tasks.findByIdAndUpdate(taskId, {
       taskName: task,
@@ -276,6 +275,35 @@ userRouter.put("/updateTaskDetails", userValdationMW, async (req, res) => {
       return res.status(200).json({
         message: `The task details updated for ${taskId}`,
       });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Some internal server error : ${err}`,
+    });
+  }
+});
+
+// endpoint to filter the tasks based on the priority
+// todo : merge this with showTasks endpoint
+userRouter.get("/filterPriority", userValdationMW, async (req, res) => {
+  const userId = req.userId;
+  const filterPriority = req.query.priority;
+  const date = req.query.currDate;
+  try {
+    const findUser = await users.findById(userId);
+    const allTasks = await Promise.all(
+      findUser.assignedTasks.map(async (e) => {
+        return await tasks.findById(e);
+      })
+    );
+    const filteredTasks = allTasks.filter((e) => {
+      const extractedDate = e.createdAt.toISOString().split("T")[0];
+      if (extractedDate === date && e.priority.includes(filterPriority))
+        return e;
+    });
+
+    return res.status(200).json({
+      prioritizedTasks: filteredTasks,
+    });
   } catch (err) {
     return res.status(500).json({
       message: `Some internal server error : ${err}`,
