@@ -266,6 +266,7 @@ userRouter.put("/chagePriority", userValdationMW, async (req, res) => {
 userRouter.put("/updateTaskDetails", userValdationMW, async (req, res) => {
   const taskId = req.query.taskId;
   const { task, desc } = req.body;
+  // todo : handle the cases when the task and the desc are null values
   try {
     const updatedTask = await tasks.findByIdAndUpdate(taskId, {
       taskName: task,

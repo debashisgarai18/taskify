@@ -13,6 +13,8 @@ const Maintasks = ({ taskDetails, reRender }) => {
   // states
   const [stroked, setStroked] = useState(taskDetails.completed);
   const [editEnabled, setEditEnabled] = useState(false);
+  const [newTask, setNewTask] = useState("");
+  const [newDesc, setNewDesc] = useState("");
 
   // functions
   const handleChecked = async () => {
@@ -76,6 +78,29 @@ const Maintasks = ({ taskDetails, reRender }) => {
     }
   };
 
+  const handleUpdateTask = async () => {
+    try {
+      const resp = await axios.put(
+        `${BACKEND_URL}user/updateTaskDetails?taskId=${taskDetails._id}`,
+        {
+          task: newTask,
+          desc: newDesc,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      if (resp) {
+        toast.success("The task is updated successfully");
+        reRender();
+      }
+    } catch (err) {
+      toast.error("Cannot update the tasks");
+    }
+  };
+
   return (
     <div className="w-full h-fit bg-[#F2B258] rounded-md px-[1rem] py-[1rem] flex flex-col gap-[1rem]">
       <div className="w-full h-fit flex justify-between items-center">
@@ -94,25 +119,47 @@ const Maintasks = ({ taskDetails, reRender }) => {
                   />
                 </div>
               )}
-              <div
-                className={`font-bold w-full text-xl ${
-                  stroked && "line-through"
-                } tracking-wider`}
-              >
-                {taskDetails.taskName.length > 15
-                  ? `${taskDetails.taskName.slice(0, 15)}...`
-                  : taskDetails.taskName}
+              {editEnabled ? (
+                <div className="w-full">
+                  <input
+                    type="text"
+                    className="w-full font-bold bg-transparent outline-none"
+                    defaultValue={taskDetails.taskName}
+                    onChange={(e) => setNewTask(e.target.value)}
+                  />
+                </div>
+              ) : (
+                <div
+                  className={`font-bold w-full text-xl ${
+                    stroked && "line-through"
+                  } tracking-wider`}
+                >
+                  {taskDetails.taskName.length > 15
+                    ? `${taskDetails.taskName.slice(0, 15)}...`
+                    : taskDetails.taskName}
+                </div>
+              )}
+            </div>
+            {editEnabled ? (
+              <div className="w-full">
+                <input
+                  type="text"
+                  className="w-full bg-transparent outline-none"
+                  defaultValue={taskDetails.description}
+                  onChange={(e) => setNewDesc(e.target.value)}
+                />
               </div>
-            </div>
-            <div
-              className={`text-sm w-full ${
-                stroked && "line-through"
-              } leading-none`}
-            >
-              {taskDetails.description.length > 40
-                ? `${taskDetails.description.slice(0, 40)}...`
-                : taskDetails.description}
-            </div>
+            ) : (
+              <div
+                className={`text-sm w-full ${
+                  stroked && "line-through"
+                } leading-none`}
+              >
+                {taskDetails.description.length > 40
+                  ? `${taskDetails.description.slice(0, 40)}...`
+                  : taskDetails.description}
+              </div>
+            )}
           </div>
           <div className="w-full h-[20%] text-sm font-bold tracking-wider">
             <div>
@@ -131,10 +178,7 @@ const Maintasks = ({ taskDetails, reRender }) => {
             onClick={handleChecked}
           />
           {editEnabled ? (
-            <GrUpdate
-              className="cursor-pointer"
-              onClick={() => setEditEnabled((prev) => !prev)}
-            />
+            <GrUpdate className="cursor-pointer" onClick={handleUpdateTask} />
           ) : (
             <FaRegEdit
               className="cursor-pointer"
