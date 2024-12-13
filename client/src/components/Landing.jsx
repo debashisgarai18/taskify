@@ -18,6 +18,7 @@ const Landing = () => {
   const [addTaskMobile, setAddTaskMobile] = useState(false);
   const [task, setTask] = useState("");
   const [desc, setDesc] = useState("");
+  const [creationDate, setCreationDate] = useState("");
 
   const nav = useNavigate();
   const { isLoading, setLoading } = useContext(LoadingContext);
@@ -77,6 +78,7 @@ const Landing = () => {
         {
           task,
           desc,
+          creationDate,
         },
         {
           headers: {
@@ -133,6 +135,7 @@ const Landing = () => {
         <Maincontent
           task={(e) => setTask(e)}
           desc={(e) => setDesc(e)}
+          createDate={(e) => setCreationDate(e)}
           add={handleAddTask}
         />
         <LandingFooter />
@@ -141,6 +144,7 @@ const Landing = () => {
         <MobileView
           task={(e) => setTask(e)}
           desc={(e) => setDesc(e)}
+          createDate={(e) => setCreationDate(e)}
           add={handleAddTask}
         />
       )}

@@ -118,13 +118,16 @@ userRouter.get("/landing", userValdationMW, async (req, res) => {
 
 // the endpoint to add the tasks
 userRouter.post("/addTasks", userValdationMW, async (req, res) => {
-  const { task, desc } = req.body;
+  const { task, desc, creationDate } = req.body;
   const userId = req.userId;
-
   try {
     const addedTask = await tasks.create({
       taskName: task,
       description: desc,
+      createdAt:
+        creationDate && !isNaN(Date.parse(creationDate))
+          ? new Date(creationDate)
+          : new Date(),
     });
     if (addedTask) {
       const updateUser = await users.findById({
@@ -165,7 +168,7 @@ userRouter.get("/showtasks", userValdationMW, async (req, res) => {
         });
       })
     );
-    
+
     const filteredTasks = allTasks.filter((e) => {
       const extractedDate = e.createdAt.toISOString().split("T")[0];
       if (extractedDate === date) return e;
@@ -210,15 +213,22 @@ userRouter.put("/updateTaskStatus", userValdationMW, async (req, res) => {
 // endpoint top delete the task from the DB
 userRouter.delete("/deleteTask", userValdationMW, async (req, res) => {
   const taskId = req.query.taskId;
-  const userId = req.userId
+  const userId = req.userId;
   try {
-    await tasks.deleteOne({
+    const resp = await tasks.deleteOne({
       _id: taskId,
     });
+    if (resp.deletedCount === 0) {
+      return res.status(404).json({
+        message: "The task is not found",
+      });
+    }
     const findUser = await users.findById({
-      _id : userId
-    })
-    findUser.assignedTasks.map((e) => console.log(e))
+      _id: userId,
+    });
+
+    findUser.assignedTasks.splice(findUser.assignedTasks.indexOf(taskId), 1);
+    findUser.save();
     return res.status(200).json({
       message: "The Task is deleted successfully",
     });

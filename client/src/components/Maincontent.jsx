@@ -7,7 +7,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import TaskLoading from "./TaskLoading";
 
-const Maincontent = ({ task, desc, add }) => {
+const Maincontent = ({ task, desc, add, createDate }) => {
   // states
   const [showDate, setShowDate] = useState("");
   const [day, setDay] = useState("");
@@ -20,7 +20,9 @@ const Maincontent = ({ task, desc, add }) => {
     useState(false);
 
   const handleCalendarChange = (date) => {
-    setSelectedDate(date ? date?.toDate() : new Date());
+    const selDate = date ? date?.toDate() : new Date();
+    setSelectedDate(selDate);
+    createDate(selDate.toISOString());
   };
 
   useEffect(() => {
@@ -212,7 +214,7 @@ Maincontent.propTypes = {
   add: PropTypes.func,
   desc: PropTypes.func,
   task: PropTypes.func,
-  userData: PropTypes.object,
+  createDate: PropTypes.func,
 };
 
 export default Maincontent;
