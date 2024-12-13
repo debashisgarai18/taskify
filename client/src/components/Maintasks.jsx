@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import { useState } from "react";
+import ExclamationMark from "../assets/icons8-exclamation-mark-48.png";
 
 const Maintasks = ({ taskDetails, reRender }) => {
   // states
@@ -52,43 +53,103 @@ const Maintasks = ({ taskDetails, reRender }) => {
     }
   };
 
+  const handlePriorityChange = async () => {
+    try {
+      const resp = await axios.put(
+        `${BACKEND_URL}user/chagePriority?taskId=${taskDetails._id}`,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      if (resp) {
+        toast.success("The priority is updated");
+        reRender();
+      }
+    } catch (err) {
+      console.log(`Error : ${err.response.data.message}`);
+      toast.error("Cannot update the priority of the task");
+    }
+  };
+
   return (
-    <div className="w-full h-[7rem] bg-[#F2B258] rounded-md pl-[1rem] pr-[0.5rem] py-[0.5rem] flex">
-      <div className="w-[70%] h-full">
-        <div className="w-full h-[80%] flex flex-col gap-[0.33rem]">
-          <div
-            className={`font-semibold w-full text-lg ${
-              stroked && "line-through"
-            } tracking-wider`}
-          >
-            {taskDetails.taskName.length > 15
-              ? `${taskDetails.taskName.slice(0, 15)}...`
-              : taskDetails.taskName}
+    <div className="w-full h-fit bg-[#F2B258] rounded-md px-[1rem] py-[1rem] flex flex-col gap-[1rem]">
+      <div className="w-full h-fit flex justify-between items-center">
+        <div className="w-[70%] h-full flex flex-col gap-[1rem]">
+          {taskDetails.priority === "low priority" && (
+            <div className="w-full h-[0.3rem] rounded-full bg-green-500"></div>
+          )}
+          <div className="w-full h-[80%] flex flex-col gap-[0.33rem]">
+            <div className="w-full flex items-center gap-[0.5rem]">
+              {taskDetails.priority === "high priority" && (
+                <div className="h-[2.75rem] w-[2.75rem] flex items-center justify-center">
+                  <img
+                    src={ExclamationMark}
+                    className="w-full h-full"
+                    alt="mark"
+                  />
+                </div>
+              )}
+              <div
+                className={`font-bold w-full text-xl ${
+                  stroked && "line-through"
+                } tracking-wider`}
+              >
+                {taskDetails.taskName.length > 15
+                  ? `${taskDetails.taskName.slice(0, 15)}...`
+                  : taskDetails.taskName}
+              </div>
+            </div>
+            <div
+              className={`text-sm w-full ${
+                stroked && "line-through"
+              } leading-none`}
+            >
+              {taskDetails.description.length > 40
+                ? `${taskDetails.description.slice(0, 40)}...`
+                : taskDetails.description}
+            </div>
           </div>
-          <div
-            className={`text-sm w-full ${
-              stroked && "line-through"
-            } leading-none`}
-          >
-            {taskDetails.description.length > 40
-              ? `${taskDetails.description.slice(0, 40)}...`
-              : taskDetails.description}
+          <div className="w-full h-[20%] text-sm font-bold tracking-wider">
+            <div>
+              Creation Date :{" "}
+              {taskDetails.createdAt
+                .split("T")[0]
+                .split("-")
+                .reverse()
+                .join("-")}
+            </div>
           </div>
         </div>
-        <div className="w-full h-[20%] text-sm font-bold tracking-wider">
-          <div>
-            Creation Date :{" "}
-            {taskDetails.createdAt.split("T")[0].split("-").reverse().join("-")}
-          </div>
+        <div className="w-[10%] h-full flex flex-col gap-[1rem] items-center justify-between text-xl text-[#333231]">
+          <RiCheckboxCircleLine
+            className="cursor-pointer"
+            onClick={handleChecked}
+          />
+          <FaRegEdit className="cursor-pointer" />
+          <RiDeleteBin6Line className="cursor-pointer" onClick={deleteTask} />
         </div>
       </div>
-      <div className="w-[30%] h-full flex flex-col items-end justify-between text-lg text-[#333231]">
-        <RiCheckboxCircleLine
-          className="cursor-pointer"
-          onClick={handleChecked}
-        />
-        <FaRegEdit className="cursor-pointer" />
-        <RiDeleteBin6Line className="cursor-pointer" onClick={deleteTask} />
+      <div className="w-full">
+        {taskDetails.priority === "low priority" ? (
+          <button
+            className="flex items-center gap-[0.5rem] border-[1px] border-black rounded-md p-[0.5rem]"
+            onClick={handlePriorityChange}
+          >
+            <div className="h-[0.5rem] w-[0.5rem] rounded-full bg-red-700"></div>
+            <div className="text-xs">Mark as High Priority</div>
+          </button>
+        ) : (
+          <button
+            className="flex items-center gap-[0.5rem] border-[1px] border-black rounded-md p-[0.5rem]"
+            onClick={handlePriorityChange}
+          >
+            <div className="h-[0.5rem] w-[0.5rem] rounded-full bg-green-700"></div>
+            <div className="text-xs">Mark as Low Priority</div>
+          </button>
+        )}
       </div>
     </div>
   );

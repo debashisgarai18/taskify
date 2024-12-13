@@ -239,6 +239,29 @@ userRouter.delete("/deleteTask", userValdationMW, async (req, res) => {
   }
 });
 
+// endpoint to change the priority of a specific task
+userRouter.put("/chagePriority", userValdationMW, async (req, res) => {
+  const taskId = req.query.taskId;
+  try {
+    const updateTask = await tasks.findById({
+      _id: taskId,
+    });
+    if (updateTask.priority === "low priority") {
+      updateTask.priority = "high priority";
+    } else {
+      updateTask.priority = "low priority";
+    }
+    updateTask.save();
+    return res.status(200).json({
+      message: `The priority is changed for task : ${taskId}`,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Some internal server error : ${err}`,
+    });
+  }
+});
+
 // todo : add a route in which the user can mark their tasks in the low / high priority
 // todo : add an endpoint to mark the tasks completed for user
 // todo : endpoint to filter the tasks on the basis of searched string

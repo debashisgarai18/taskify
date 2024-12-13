@@ -186,7 +186,6 @@ const Maincontent = ({ task, desc, add, createDate }) => {
               No tasks Present
             </div>
           ) : (
-            // todo : make it responsive
             <div className="w-full max-h-[400px] grid grid-cols-1 md:grid-cols-2 mt-[0.5rem] gap-[1rem] overflow-y-auto">
               {filteredTasksByDate.map((e, idx) => (
                 <Maintasks
