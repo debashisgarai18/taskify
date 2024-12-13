@@ -7,10 +7,12 @@ import axios from "axios";
 import { BACKEND_URL } from "../../config";
 import { useState } from "react";
 import ExclamationMark from "../assets/icons8-exclamation-mark-48.png";
+import { GrUpdate } from "react-icons/gr";
 
 const Maintasks = ({ taskDetails, reRender }) => {
   // states
   const [stroked, setStroked] = useState(taskDetails.completed);
+  const [editEnabled, setEditEnabled] = useState(false);
 
   // functions
   const handleChecked = async () => {
@@ -128,7 +130,17 @@ const Maintasks = ({ taskDetails, reRender }) => {
             className="cursor-pointer"
             onClick={handleChecked}
           />
-          <FaRegEdit className="cursor-pointer" />
+          {editEnabled ? (
+            <GrUpdate
+              className="cursor-pointer"
+              onClick={() => setEditEnabled((prev) => !prev)}
+            />
+          ) : (
+            <FaRegEdit
+              className="cursor-pointer"
+              onClick={() => setEditEnabled((prev) => !prev)}
+            />
+          )}
           <RiDeleteBin6Line className="cursor-pointer" onClick={deleteTask} />
         </div>
       </div>

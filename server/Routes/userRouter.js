@@ -262,9 +262,26 @@ userRouter.put("/chagePriority", userValdationMW, async (req, res) => {
   }
 });
 
-// todo : add a route in which the user can mark their tasks in the low / high priority
-// todo : add an endpoint to mark the tasks completed for user
+// endpoint to update task or the description
+userRouter.put("/updateTaskDetails", userValdationMW, async (req, res) => {
+  const taskId = req.query.taskId;
+  const { task, desc } = req.body;
+  try {
+    const updatedTask = await tasks.findByIdAndUpdate(taskId, {
+      taskName: task,
+      description: desc,
+    });
+    if (updatedTask)
+      return res.status(200).json({
+        message: `The task details updated for ${taskId}`,
+      });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Some internal server error : ${err}`,
+    });
+  }
+});
+
 // todo : endpoint to filter the tasks on the basis of searched string
-// todo : add endpoint show tasks on the basis of given start date
 
 module.exports = userRouter;
