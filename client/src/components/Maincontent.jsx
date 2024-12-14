@@ -19,6 +19,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
   const [forceRerenderOnFetchData, setForceRerenderOnFetchData] =
     useState(false);
   const [priority, setPriority] = useState("");
+  const [searchedString, setSearchedString] = useState("");
 
   const handleCalendarChange = (date) => {
     const selDate = date ? date?.toDate() : new Date();
@@ -93,6 +94,21 @@ const Maincontent = ({ task, desc, add, createDate }) => {
     })();
   }, [selectedDate, forceRerenderOnFetchData, priority]);
 
+  // functions
+  // demo debouncing
+  const debouncedFunction = (func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const setDebouncedValue = debouncedFunction(
+    (e) => setSearchedString(e.target.value),
+    300
+  );
+
   return (
     <div className="w-full md:w-[60%] mb-[5rem] md:mb-0 relative m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
       {/* for the top div */}
@@ -135,6 +151,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
         {/* top-right div */}
         <div className="w-full md:w-[65%] h-full px-[1rem] py-[0.75rem]">
           <div className="w-full h-[3rem] hidden md:flex flex-row justify-betwwen items-center gap-[15px]">
+            {searchedString}
             <input
               type="text"
               placeholder="Title of the task"
@@ -174,6 +191,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
                 type="text"
                 placeholder="Search by name"
                 className="bg-white w-full h-full rounded-md px-[0.5rem] text-xs outline-none"
+                onChange={(e) => setDebouncedValue(e)}
               />
               <button className="h-full bg-white rounded-md   px-[0.5rem]  absolute right-0">
                 <IoSearchSharp />
@@ -198,13 +216,6 @@ const Maincontent = ({ task, desc, add, createDate }) => {
               ))}
             </div>
           )}
-          {/* {filteredTasksByDate.length > 0 && (
-            <div className="w-full mt-[1rem] flex items-center justify-center">
-              <button className="bg-white px-[1rem] py-[0.3rem] font-bold tracking-wider border-[3px] border-[#eeab4e] text-[#333231] rounded-md active:translate-y-[1px]">
-                Load More
-              </button>
-            </div>
-          )} */}
         </div>
       </div>
     </div>

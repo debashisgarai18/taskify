@@ -284,35 +284,6 @@ userRouter.put("/updateTaskDetails", userValdationMW, async (req, res) => {
   }
 });
 
-// endpoint to filter the tasks based on the priority
-// // todo : merge this with showTasks endpoint
-// userRouter.get("/filterPriority", userValdationMW, async (req, res) => {
-//   const userId = req.userId;
-//   const filterPriority = req.query.priority;
-//   const date = req.query.currDate;
-//   try {
-//     const findUser = await users.findById(userId);
-//     const allTasks = await Promise.all(
-//       findUser.assignedTasks.map(async (e) => {
-//         return await tasks.findById(e);
-//       })
-//     );
-//     const filteredTasks = allTasks.filter((e) => {
-//       const extractedDate = e.createdAt.toISOString().split("T")[0];
-//       if (extractedDate === date && e.priority.includes(filterPriority))
-//         return e;
-//     });
-
-//     return res.status(200).json({
-//       prioritizedTasks: filteredTasks,
-//     });
-//   } catch (err) {
-//     return res.status(500).json({
-//       message: `Some internal server error : ${err}`,
-//     });
-//   }
-// });
-
 // todo : endpoint to filter the tasks on the basis of searched string
 
 module.exports = userRouter;
