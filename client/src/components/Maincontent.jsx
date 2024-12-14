@@ -18,6 +18,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
   const [taskLoading, setTaskLoading] = useState(false);
   const [forceRerenderOnFetchData, setForceRerenderOnFetchData] =
     useState(false);
+  const [priority, setPriority] = useState("");
 
   const handleCalendarChange = (date) => {
     const selDate = date ? date?.toDate() : new Date();
@@ -72,7 +73,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
               .split(",")[0]
               .split("/")
               .reverse()
-              .join("-")}`,
+              .join("-")}&priority=${priority}`,
             {
               headers: {
                 Authorization: localStorage.getItem("token"),
@@ -90,7 +91,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
         }
       }
     })();
-  }, [selectedDate, forceRerenderOnFetchData]);
+  }, [selectedDate, forceRerenderOnFetchData, priority]);
 
   return (
     <div className="w-full md:w-[60%] mb-[5rem] md:mb-0 relative m-auto bg-[#FAF7F2] mt-[2rem] rounded-xl py-[1rem] px-[1.5rem] shadow-lg">
@@ -158,11 +159,12 @@ const Maincontent = ({ task, desc, add, createDate }) => {
               <select
                 name="Priority"
                 className="h-full text-sm tracking-wide font-bold focus:outline-none cursor-pointer rounded-md px-[0.3rem]"
+                onChange={(e) => setPriority(e.target.value)}
               >
                 <option value="high" className="text-sm tracking-wide">
                   High Priority
                 </option>
-                <option value="less" className="text-sm tracking-wide">
+                <option value="low" className="text-sm tracking-wide">
                   Less Priority
                 </option>
               </select>
