@@ -18,7 +18,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
   const [taskLoading, setTaskLoading] = useState(false);
   const [forceRerenderOnFetchData, setForceRerenderOnFetchData] =
     useState(false);
-  const [priority, setPriority] = useState("");
+  const [priority, setPriority] = useState("low");
   const [searchedString, setSearchedString] = useState("");
 
   const handleCalendarChange = (date) => {
@@ -175,6 +175,7 @@ const Maincontent = ({ task, desc, add, createDate }) => {
             <div className="h-full">
               <select
                 name="Priority"
+                value={priority}
                 className="h-full text-sm tracking-wide font-bold focus:outline-none cursor-pointer rounded-md px-[0.3rem]"
                 onChange={(e) => setPriority(e.target.value)}
               >
